@@ -22,7 +22,10 @@ export default function Header({ purpose }) {
           PHOTO CONTEST
         </Text>
         {purpose === "AUTH" && (
-          <Text style={styles.tagline}>See what others see!</Text>
+          <>
+            <Text style={styles.tagline}>See what others see!</Text>
+            <Text style={styles.message}>Login to continue voting</Text>
+          </>
         )}
       </LinearGradient>
     </View>
@@ -70,5 +73,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontFamily: "KaushanScript",
     letterSpacing: 2.5,
+  },
+  message: {
+    fontSize: 14,
+    color: "#fff",
+    textAlign: "center",
   },
 });
