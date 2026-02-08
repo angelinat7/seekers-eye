@@ -6,6 +6,7 @@ import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
 import ProfileScreen from "../screens/ProfileScreen";
 import UploadPhoto from "../screens/UploadPhoto";
+import ProfileNavigator from "./ProfileNavigator";
 
 export default function TabNavigator() {
   const Tab = createBottomTabNavigator();
@@ -41,7 +42,7 @@ export default function TabNavigator() {
       />
       <Tab.Screen
         name="Profile"
-        component={user ? ProfileScreen : LoginScreen}
+        component={ProfileNavigator}
         options={{
           title: "Profile",
           headerShown: false,
