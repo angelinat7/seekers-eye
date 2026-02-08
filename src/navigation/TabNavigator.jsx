@@ -28,6 +28,7 @@ export default function TabNavigator() {
       <Tab.Screen
         name="Upload"
         component={UploadPhoto}
+        // redirect=
         options={{
           title: "Add Photo",
           headerShown: false,

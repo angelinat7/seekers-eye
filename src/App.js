@@ -8,6 +8,7 @@ import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
 import { StyleSheet } from "react-native";
 import RootNavigator from "./navigation/RootNavigator";
+import { AuthProvider } from "./context/auth/AuthProvider";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -29,7 +30,9 @@ export default function App() {
   return (
     <NavigationContainer>
       <StatusBar style="auto" />
-      <RootNavigator />
+      <AuthProvider>
+        <RootNavigator />
+      </AuthProvider>
     </NavigationContainer>
   );
 }
