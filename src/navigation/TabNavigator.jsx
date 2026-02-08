@@ -3,11 +3,17 @@ import UserProfile from "../screens/UserProfile";
 import HomeScreen from "../screens/HomeScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "../constants/Colors";
 
 export default function TabNavigator() {
   const Tab = createBottomTabNavigator();
   return (
-    <Tab.Navigator>
+    <Tab.Navigator
+      screenOptions={{
+        tabBarActiveTintColor: Colors.primary,
+        tabBarIconStyle: { marginBottom: 2 },
+      }}
+    >
       <Tab.Screen
         name="Home"
         component={HomeScreen}
@@ -44,3 +50,4 @@ export default function TabNavigator() {
     </Tab.Navigator>
   );
 }
+
