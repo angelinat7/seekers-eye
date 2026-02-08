@@ -2,10 +2,10 @@ import { useState } from "react";
 import { AuthContext } from "./AuthContext";
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState({ name: "", email: "" });
+  const [user, setUser] = useState(null);
 
-  const login = () => {
-    setUser({ name: "Ang", email: "ang@ang.js" });
+  const login = (userData) => {
+    setUser(userData);
   };
 
   const logout = () => {
@@ -13,8 +13,8 @@ export function AuthProvider({ children }) {
   };
 
   const authData = {
-    user: { name: "", email: "" },
-    isGuest: !user,
+    user,
+    isAuthenticated: !!user,
     login,
     logout,
   };

@@ -1,12 +1,15 @@
-import UploadPhoto from "../screens/UploadPhoto";
-import UserProfile from "../screens/UserProfile";
-import HomeScreen from "../screens/HomeScreen";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Ionicons } from "@expo/vector-icons";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Colors } from "../constants/Colors";
+import { UseAuth } from "../context/auth/AuthContext";
+import HomeScreen from "../screens/HomeScreen";
+import LoginScreen from "../screens/LoginScreen";
+import ProfileScreen from "../screens/ProfileScreen";
+import UploadPhoto from "../screens/UploadPhoto";
 
 export default function TabNavigator() {
   const Tab = createBottomTabNavigator();
+  const { isAuthenticated, user } = UseAuth();
   return (
     <Tab.Navigator
       screenOptions={{
@@ -27,8 +30,7 @@ export default function TabNavigator() {
       />
       <Tab.Screen
         name="Upload"
-        component={UploadPhoto}
-        // redirect=
+        component={user ? UploadPhoto : LoginScreen}
         options={{
           title: "Add Photo",
           headerShown: false,
@@ -39,7 +41,7 @@ export default function TabNavigator() {
       />
       <Tab.Screen
         name="Profile"
-        component={UserProfile}
+        component={user ? ProfileScreen : LoginScreen}
         options={{
           title: "Profile",
           headerShown: false,

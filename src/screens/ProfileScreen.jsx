@@ -1,6 +1,6 @@
 import { View, Text, StyleSheet } from "react-native";
 
-export default function UserProfile() {
+export default function ProfileScreen() {
   return (
     <View style={styles.container}>
       <Text>User Profile</Text>
@@ -15,3 +15,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 });
+
