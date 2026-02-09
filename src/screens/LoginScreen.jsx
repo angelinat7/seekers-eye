@@ -1,44 +1,84 @@
-import { Button, StyleSheet, Text, View, TextInput } from "react-native";
+import {
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import Header from "../components/UI/Header";
+import PrimaryButton from "../components/UI/PrimaryButton";
+import TextButton from "../components/UI/TextButton";
 import { Colors } from "../constants/Colors";
 
 export default function LoginScreen({ navigation }) {
   return (
     <>
-      <Header purpose="AUTH" />
-      <View style={styles.container}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput style={styles.input} placeholder="Enter your email" />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Password</Text>
-          <TextInput style={styles.input} placeholder="••••••••" />
-        </View>
-
-        <Button title="Login" onPress={() => {}} />
-        <Text style={styles.info}>Don't have an account? Register here</Text>
-        <Text style={styles.info}>Continue as guest</Text>
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        style={{ flex: 1 }}
+      >
+        <ScrollView
+          contentContainerStyle={{ flexGrow: 1 }}
+          keyboardShouldPersistTaps="handled"
+        >
+          <Header purpose="AUTH" />
+          <View style={styles.scrollContainer}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Email</Text>
+              <TextInput style={styles.input} placeholder="Enter your email" />
+            </View>
+            <View style={styles.inputContainer}>
+              <Text style={styles.label}>Password</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="••••••••"
+                secureTextEntry
+              />
+            </View>
+            <PrimaryButton
+              title="Login"
+              iconName="log-in-outline"
+              onPress={() => {}}
+            />
+            <View style={styles.buttonRow}>
+              <Text style={styles.info}>Don't have an account?</Text>
+              <TextButton
+                title="Register here"
+                color="accent"
+                onPress={() => null}
+              />
+            </View>
+            <View style={{ marginTop: 20, justifyContent: "center" }}>
+              <TextButton title="Continue as guest" color="textSecondary" />
+            </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 20,
+    flex: 1,
+  },
+  scrollContainer: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    paddingBottom: 30,
+    backgroundColor: "transparent",
   },
   inputContainer: {
     width: "100%",
     paddingHorizontal: 20,
-    paddingVertical: 10,
+    paddingVertical: 5,
   },
   label: {
     fontSize: 16,
     fontWeight: "bold",
-    color: Colors.inputLabel,
+    color: Colors.textSecondary,
     marginBottom: 8,
     textAlign: "left",
   },
@@ -55,5 +95,12 @@ const styles = StyleSheet.create({
     marginTop: 16,
     fontSize: 14,
     textAlign: "center",
+    color: Colors.textSecondary,
+  },
+  buttonRow: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    gap: 10,
+    justifyContent: "center",
   },
 });

@@ -4,7 +4,6 @@ import { Colors } from "../constants/Colors";
 import { UseAuth } from "../context/auth/AuthContext";
 import HomeScreen from "../screens/HomeScreen";
 import LoginScreen from "../screens/LoginScreen";
-import ProfileScreen from "../screens/ProfileScreen";
 import UploadPhoto from "../screens/UploadPhoto";
 import ProfileNavigator from "./ProfileNavigator";
 
@@ -16,6 +15,7 @@ export default function TabNavigator() {
       screenOptions={{
         tabBarActiveTintColor: Colors.primary,
         tabBarIconStyle: { marginBottom: 2 },
+        tabBarHideOnKeyboard: true,
       }}
     >
       <Tab.Screen
