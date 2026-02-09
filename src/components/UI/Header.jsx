@@ -2,7 +2,7 @@ import { View, Text, Image, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Colors } from "../../constants/Colors";
 
-export default function Header({ purpose }) {
+export default function Header({ purpose, authVariant }) {
   return (
     <View style={styles.container}>
       <LinearGradient
@@ -22,10 +22,13 @@ export default function Header({ purpose }) {
           PHOTO CONTEST
         </Text>
         {purpose === "AUTH" && (
-          <>
-            <Text style={styles.tagline}>See what others see!</Text>
-            <Text style={styles.message}>Login to continue voting</Text>
-          </>
+          <Text style={styles.tagline}>See what others see!</Text>
+        )}
+        {purpose === "AUTH" && authVariant === "login" && (
+          <Text style={styles.message}>Login to continue voting</Text>
+        )}
+        {purpose === "AUTH" && authVariant === "register" && (
+          <Text style={styles.message}>Create an account to start sharing</Text>
         )}
       </LinearGradient>
     </View>
@@ -69,7 +72,7 @@ const styles = StyleSheet.create({
   tagline: {
     fontSize: 24,
     color: "#fff",
-    marginVertical: 20,
+    marginVertical: 10,
     textAlign: "center",
     fontFamily: "KaushanScript",
     letterSpacing: 2.5,
@@ -78,5 +81,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#fff",
     textAlign: "center",
+    marginBottom: 10,
   },
 });

@@ -5,10 +5,10 @@ import TextButton from "../components/UI/TextButton";
 import { Colors } from "../constants/Colors";
 import { RedirectTargets } from "../constants/navigation";
 
-export default function LoginScreen({ navigation, route }) {
-  const redirectTo = route.params?.redirectTo ?? RedirectTargets.HOME;
+export default function RegisterScreen({ navigation, route }) {
+  const redirectTo = route.params?.redirectTo;
 
-  const handleLoginSuccess = () => {
+  const handleRegisterSuccess = () => {
     switch (redirectTo) {
       case RedirectTargets.ADD_PHOTO:
         navigation.replace("TabNavigator", { screen: "Upload" });
@@ -23,11 +23,15 @@ export default function LoginScreen({ navigation, route }) {
   };
 
   return (
-    <AuthLayout purpose="AUTH" authVariant={"login"}>
+    <AuthLayout purpose="AUTH" authVariant={"register"}>
       <View style={styles.scrollContainer}>
         <View style={styles.inputContainer}>
+          <Text style={styles.label}>Name</Text>
+          <TextInput style={styles.input} placeholder="Your name" />
+        </View>
+        <View style={styles.inputContainer}>
           <Text style={styles.label}>Email</Text>
-          <TextInput style={styles.input} placeholder="Enter your email" />
+          <TextInput style={styles.input} placeholder="your@email.com" />
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Password</Text>
@@ -38,33 +42,23 @@ export default function LoginScreen({ navigation, route }) {
           />
         </View>
         <PrimaryButton
-          title="Login"
-          iconName="log-in-outline"
-          onPress={handleLoginSuccess}
+          title="Register"
+          iconName="person-add-outline"
+          onPress={handleRegisterSuccess}
         />
         <View style={styles.buttonRow}>
-          <Text style={styles.info}>Don't have an account?</Text>
+          <Text style={styles.info}>Already have an account?</Text>
           <TextButton
-            title="Register here"
+            title="Login here"
             color="accent"
-            onPress={() =>
-              navigation.navigate("Register", {
-                redirectTo,
-              })
-            }
-          />
-        </View>
-        <View style={{ marginTop: 20, justifyContent: "center" }}>
-          <TextButton
-            title="Continue as guest"
-            color="textSecondary"
-            onPress={() => navigation.navigate("Register", { redirectTo })}
+            onPress={() => navigation.navigate("Login", { redirectTo })}
           />
         </View>
       </View>
     </AuthLayout>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

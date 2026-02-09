@@ -3,19 +3,28 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Colors } from "../constants/Colors";
 import { UseAuth } from "../context/auth/AuthContext";
 import HomeScreen from "../screens/HomeScreen";
-import LoginScreen from "../screens/LoginScreen";
 import UploadPhoto from "../screens/UploadPhoto";
 import ProfileNavigator from "./ProfileNavigator";
+import { RedirectTargets } from "../constants/navigation";
 
 export default function TabNavigator() {
   const Tab = createBottomTabNavigator();
-  const { isAuthenticated, user } = UseAuth();
+  const { isAuthenticated } = UseAuth();
+
+  const redirectToAuth = (navigation, target) => {
+    navigation.navigate("AuthNavigator", {
+      screen: "Login",
+      params: { redirectTo: target },
+    });
+  };
+
   return (
     <Tab.Navigator
       screenOptions={{
         tabBarActiveTintColor: Colors.primary,
         tabBarIconStyle: { marginBottom: 2 },
         tabBarHideOnKeyboard: true,
+        headerShown: false,
       }}
     >
       <Tab.Screen
@@ -23,7 +32,6 @@ export default function TabNavigator() {
         component={HomeScreen}
         options={{
           title: "Home",
-          headerShown: false,
           tabBarIcon: ({ color }) => (
             <Ionicons size={28} name="home" color={color} />
           ),
@@ -31,14 +39,25 @@ export default function TabNavigator() {
       />
       <Tab.Screen
         name="Upload"
-        component={user ? UploadPhoto : LoginScreen}
+        component={UploadPhoto}
         options={{
           title: "Add Photo",
-          headerShown: false,
           tabBarIcon: ({ color }) => (
             <Ionicons size={28} name="add-circle-outline" color={color} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            if (!isAuthenticated) {
+              e.preventDefault();
+              // navigation.navigate("AuthNavigator", {
+              //   screen: "Login",
+              //   params: { redirectTo: RedirectTargets.ADD_PHOTO },
+              // });
+              redirectToAuth(navigation, RedirectTargets.ADD_PHOTO);
+            }
+          },
+        })}
       />
       <Tab.Screen
         name="Profile"
@@ -50,6 +69,17 @@ export default function TabNavigator() {
             <Ionicons size={28} name="person" color={color} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            if (!isAuthenticated) {
+              e.preventDefault();
+              // navigation.navigate("AuthNavigator", {
+              //   params: { redirectTo: RedirectTargets.PROFILE },
+              // });
+              redirectToAuth(navigation, RedirectTargets.PROFILE);
+            }
+          },
+        })}
       />
     </Tab.Navigator>
   );

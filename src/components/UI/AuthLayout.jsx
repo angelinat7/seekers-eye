@@ -1,7 +1,7 @@
 import { KeyboardAvoidingView, ScrollView, Platform } from "react-native";
 import Header from "./Header";
 
-export default function AuthLayout({ children, purpose }) {
+export default function AuthLayout({ children, purpose, authVariant }) {
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -11,7 +11,7 @@ export default function AuthLayout({ children, purpose }) {
         keyboardShouldPersistTaps="handled"
         contentContainerStyle={{ flexGrow: 1 }}
       >
-        <Header purpose={purpose} />
+        <Header purpose={purpose} authVariant={authVariant} />
         {children}
       </ScrollView>
     </KeyboardAvoidingView>
