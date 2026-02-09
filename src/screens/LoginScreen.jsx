@@ -11,52 +11,42 @@ import Header from "../components/UI/Header";
 import PrimaryButton from "../components/UI/PrimaryButton";
 import TextButton from "../components/UI/TextButton";
 import { Colors } from "../constants/Colors";
+import AuthLayout from "../components/UI/AuthLayout";
 
 export default function LoginScreen({ navigation }) {
   return (
-    <>
-      <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-        style={{ flex: 1 }}
-      >
-        <ScrollView
-          contentContainerStyle={{ flexGrow: 1 }}
-          keyboardShouldPersistTaps="handled"
-        >
-          <Header purpose="AUTH" />
-          <View style={styles.scrollContainer}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Email</Text>
-              <TextInput style={styles.input} placeholder="Enter your email" />
-            </View>
-            <View style={styles.inputContainer}>
-              <Text style={styles.label}>Password</Text>
-              <TextInput
-                style={styles.input}
-                placeholder="••••••••"
-                secureTextEntry
-              />
-            </View>
-            <PrimaryButton
-              title="Login"
-              iconName="log-in-outline"
-              onPress={() => {}}
-            />
-            <View style={styles.buttonRow}>
-              <Text style={styles.info}>Don't have an account?</Text>
-              <TextButton
-                title="Register here"
-                color="accent"
-                onPress={() => null}
-              />
-            </View>
-            <View style={{ marginTop: 20, justifyContent: "center" }}>
-              <TextButton title="Continue as guest" color="textSecondary" />
-            </View>
-          </View>
-        </ScrollView>
-      </KeyboardAvoidingView>
-    </>
+    <AuthLayout purpose="AUTH">
+      <View style={styles.scrollContainer}>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Email</Text>
+          <TextInput style={styles.input} placeholder="Enter your email" />
+        </View>
+        <View style={styles.inputContainer}>
+          <Text style={styles.label}>Password</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="••••••••"
+            secureTextEntry
+          />
+        </View>
+        <PrimaryButton
+          title="Login"
+          iconName="log-in-outline"
+          onPress={() => {}}
+        />
+        <View style={styles.buttonRow}>
+          <Text style={styles.info}>Don't have an account?</Text>
+          <TextButton
+            title="Register here"
+            color="accent"
+            onPress={() => null}
+          />
+        </View>
+        <View style={{ marginTop: 20, justifyContent: "center" }}>
+          <TextButton title="Continue as guest" color="textSecondary" />
+        </View>
+      </View>
+    </AuthLayout>
   );
 }
 const styles = StyleSheet.create({
