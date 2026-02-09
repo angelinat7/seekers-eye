@@ -24,14 +24,19 @@ export default function RegisterScreen({ navigation, route }) {
 
   return (
     <AuthLayout purpose="AUTH" authVariant={"register"}>
-      <View style={styles.scrollContainer}>
+      <View style={styles.formContainer}>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Name</Text>
           <TextInput style={styles.input} placeholder="Your name" />
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Email</Text>
-          <TextInput style={styles.input} placeholder="your@email.com" />
+          <TextInput
+            style={styles.input}
+            placeholder="your@email.com"
+            keyboardType="email-address"
+            autoCapitalize="none"
+          />
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Password</Text>
@@ -63,38 +68,31 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  scrollContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    paddingBottom: 30,
-    backgroundColor: "transparent",
+  formContainer: {
+    width: "100%",
+    marginTop: 30,
+    paddingHorizontal: 20,
   },
   inputContainer: {
-    width: "100%",
-    paddingHorizontal: 20,
-    paddingVertical: 5,
+    paddingVertical: 16,
   },
   label: {
     fontSize: 16,
     fontWeight: "bold",
-    color: Colors.textSecondary,
+    color: Colors.label,
     marginBottom: 8,
-    textAlign: "left",
   },
   input: {
     padding: 12,
     paddingHorizontal: 15,
     borderWidth: 1,
-    borderColor: "#inputBorder",
-    backgroundColor: Colors.inputBackground,
+    borderColor: Colors.border,
+    backgroundColor: Colors.background,
     borderRadius: 8,
-    marginBottom: 16,
+    color: Colors.textPrimary,
   },
   info: {
-    marginTop: 16,
     fontSize: 14,
-    textAlign: "center",
     color: Colors.textSecondary,
   },
   buttonRow: {
@@ -102,5 +100,6 @@ const styles = StyleSheet.create({
     alignItems: "baseline",
     gap: 10,
     justifyContent: "center",
+    marginTop: 16,
   },
 });
