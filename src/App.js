@@ -1,16 +1,11 @@
 import {
-  KaushanScript_400Regular,
   useFonts,
+  KaushanScript_400Regular,
 } from "@expo-google-fonts/kaushan-script";
-import { NavigationContainer } from "@react-navigation/native";
-import * as SplashScreen from "expo-splash-screen";
-import { StatusBar } from "expo-status-bar";
 import { useEffect } from "react";
-import { StyleSheet } from "react-native";
-import RootNavigator from "./navigation/RootNavigator";
-import { AuthProvider } from "./context/auth/AuthProvider";
-
-SplashScreen.preventAutoHideAsync();
+import AppProvider from "./context/AppProvider";
+import * as ExpoSplashScreen from "expo-splash-screen";
+import AppContent from "./components/AppContent";
 
 export default function App() {
   const [loaded, error] = useFonts({
@@ -19,7 +14,7 @@ export default function App() {
 
   useEffect(() => {
     if (loaded || error) {
-      SplashScreen.hideAsync();
+      ExpoSplashScreen.hideAsync();
     }
   }, [loaded, error]);
 
@@ -28,21 +23,9 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <StatusBar style="auto" />
-      <AuthProvider>
-        <RootNavigator />
-      </AuthProvider>
-    </NavigationContainer>
+    <AppProvider>
+      <AppContent />
+    </AppProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
 
