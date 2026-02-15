@@ -4,6 +4,7 @@ import { useAuth } from "../context/auth/AuthContext";
 
 import { TAB_SCREENS } from "../constants/tab-screens";
 import { useTheme } from "../context/theme/ThemeContext";
+import { View } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -24,11 +25,14 @@ export default function TabNavigator() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
-        tabBarActiveTintColor: theme.primary,
+        tabBarActiveTintColor: theme.tab.active,
         tabBarInactiveTintColor: theme.textSecondary,
         tabBarStyle: {
           backgroundColor: theme.background,
           borderTopColor: theme.border,
+          height: 110,
+          paddingTop: 4,
+          paddingVertical: 2,
         },
         tabBarIconStyle: { marginBottom: 2 },
         tabBarHideOnKeyboard: true,
