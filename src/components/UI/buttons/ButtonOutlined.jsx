@@ -1,5 +1,5 @@
 import { Pressable, View, Text, StyleSheet } from "react-native";
-import { useTheme } from "../../context/theme/ThemeContext";
+import { useTheme } from "../../../context/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function ButtonOutlined({
@@ -7,8 +7,12 @@ export default function ButtonOutlined({
   iconName,
   disabled = false,
   onPress,
+  size = 24,
+  color,
+  style,
 }) {
   const { theme } = useTheme();
+  const buttonColor = color ?? theme.secondary;
 
   return (
     <Pressable
@@ -17,18 +21,20 @@ export default function ButtonOutlined({
       style={({ pressed }) => [
         styles.button,
         {
-          borderColor: theme.secondary,
-          backgroundColor: pressed ? `${theme.secondary}15` : "transparent",
+          borderColor: buttonColor,
+          backgroundColor: pressed ? `${buttonColor}15` : "transparent",
+          // backgroundColor: pressed ? `${theme.secondary}15` : "transparent",
         },
         pressed && styles.pressed,
         disabled && styles.disabled,
+        style,
       ]}
     >
-      <View style={styles.iconContainer}>
+      <View style={[styles.iconContainer]}>
         {iconName && (
-          <Ionicons size={24} name={iconName} color={theme.secondary} />
+          <Ionicons size={size} name={iconName} color={buttonColor} />
         )}
-        <Text style={[styles.title, { color: theme.secondary }]}>{title}</Text>
+        <Text style={[styles.title, { color: buttonColor }]}>{title}</Text>
       </View>
     </Pressable>
   );
@@ -36,7 +42,6 @@ export default function ButtonOutlined({
 
 const styles = StyleSheet.create({
   button: {
-    width: "100%",
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderWidth: 2,

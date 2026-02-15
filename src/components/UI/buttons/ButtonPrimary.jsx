@@ -1,6 +1,6 @@
 import { Pressable, View, Text, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { useTheme } from "../../context/theme/ThemeContext";
+import { useTheme } from "../../../context/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function ButtonPrimary({
@@ -33,8 +33,12 @@ export default function ButtonPrimary({
           style={[styles.gradient, disabled && styles.disabled]}
         >
           <View style={styles.iconContainer}>
-            {iconName && <Ionicons size={24} name={iconName} color="white" />}
-            <Text style={styles.title}>{title}</Text>
+            {iconName && (
+              <Ionicons size={24} name={iconName} color={theme.surface} />
+            )}
+            <Text style={[styles.title, { color: theme.surface }]}>
+              {title}
+            </Text>
           </View>
         </LinearGradient>
       )}
@@ -54,12 +58,11 @@ const styles = StyleSheet.create({
   },
   iconContainer: {
     flexDirection: "row",
-    gap: 8,
+    gap: 12,
     justifyContent: "center",
     alignItems: "center",
   },
   title: {
-    color: "#fff",
     fontSize: 16,
     fontWeight: "bold",
     textAlign: "center",

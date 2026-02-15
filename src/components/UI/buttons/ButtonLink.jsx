@@ -1,5 +1,5 @@
 import { Pressable, Text, StyleSheet } from "react-native";
-import { useTheme } from "../../context/theme/ThemeContext";
+import { useTheme } from "../../../context/theme/ThemeContext";
 
 export default function ButtonLink({
   title,
@@ -28,7 +28,9 @@ export default function ButtonLink({
         disabled && styles.disabled,
       ]}
     >
-      <Text style={{ color: theme[colorKey] }}>{title}</Text>
+      <Text style={{ color: theme[colorKey], fontWeight: "bold" }}>
+        {title}
+      </Text>
     </Pressable>
   );
 }
