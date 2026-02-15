@@ -1,77 +1,84 @@
-import { View, Text, Image, StyleSheet } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
-import { Colors } from "../../constants/Colors";
+import { useTheme } from "../../context/theme/ThemeContext";
+import { HEADER_VARIANTS } from "../../constants/header-variants";
 
-export default function Header({ purpose, authVariant }) {
+export default function Header({ variant = "HOME" }) {
+  const { theme } = useTheme();
+  const config = HEADER_VARIANTS[variant] || HEADER_VARIANTS.HOME;
+
   return (
-    <View style={styles.container}>
-      <LinearGradient
-        colors={[Colors.gradient.start, Colors.gradient.end]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 0 }}
-        style={{ padding: 16, borderRadius: 8 }}
-      >
-        <Text style={styles.title}>Seeker's Eye</Text>
+    <LinearGradient
+      colors={[theme.gradient.start, theme.gradient.end]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 0 }}
+      style={styles.container}
+    >
+      <Text style={[styles.title, { color: theme.header.title }]}>
+        Seeker's Eye
+      </Text>
+
+      {config.showSubtitle && (
         <Text
           style={[
             styles.subtitle,
-            purpose === "HOME" && styles.home.subtitle,
-            purpose === "AUTH" && styles.auth.subtitle,
+            getSubtitleStyle(variant),
+            { color: theme.header.subtitle },
           ]}
         >
           PHOTO CONTEST
         </Text>
-        {purpose === "AUTH" && (
-          <Text style={styles.tagline}>See what others see!</Text>
-        )}
-        {purpose === "AUTH" && authVariant === "login" && (
-          <Text style={styles.message}>Login to continue voting</Text>
-        )}
-        {purpose === "AUTH" && authVariant === "register" && (
-          <Text style={styles.message}>Create an account to start sharing</Text>
-        )}
-      </LinearGradient>
-    </View>
+      )}
+
+      {config.showTagline && (
+        <Text style={[styles.tagline, { color: theme.header.title }]}>
+          See what others see!
+        </Text>
+      )}
+
+      {config.showMessage && (
+        <Text style={[styles.message, { color: theme.header.title }]}>
+          {config.message}
+        </Text>
+      )}
+    </LinearGradient>
   );
 }
 
+const getSubtitleStyle = (variant) => {
+  const styles = StyleSheet.create({
+    home: {
+      lineHeight: 14,
+      marginBottom: 5,
+    },
+    auth: {
+      lineHeight: 24,
+      marginVertical: 10,
+    },
+  });
+
+  return variant === "HOME" ? styles.home : styles.auth;
+};
+
 const styles = StyleSheet.create({
   container: {
-    // backgroundColor: "#fff",
-  },
-  imageContainer: {
-    paddingLeft: 20,
-    paddingTop: 30,
+    padding: 16,
+    borderRadius: 8,
   },
   title: {
     marginTop: 30,
     letterSpacing: 2,
-    color: "#fff",
     fontFamily: "KaushanScript",
     fontSize: 40,
   },
   subtitle: {
     fontSize: 16,
-    color: Colors.primary,
     fontWeight: "bold",
     letterSpacing: 1.8,
-    paddingLeft: 5,
-  },
-  home: {
-    subtitle: {
-      lineHeight: 14,
-      marginBottom: 5,
-    },
-  },
-  auth: {
-    subtitle: {
-      lineHeight: 24,
-      marginVertical: 10,
-    },
+    paddingLeft: 10,
   },
   tagline: {
     fontSize: 24,
-    color: "#fff",
     marginVertical: 10,
     textAlign: "center",
     fontFamily: "KaushanScript",
@@ -79,7 +86,6 @@ const styles = StyleSheet.create({
   },
   message: {
     fontSize: 14,
-    color: "#fff",
     textAlign: "center",
     marginBottom: 10,
   },

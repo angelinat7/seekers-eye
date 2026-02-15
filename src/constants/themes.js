@@ -17,7 +17,7 @@ export const Colors = {
   },
 };
 
-export const Themes = {
+export const themes = {
   light: {
     primary: "#295185",
     secondary: "#F7931E",
@@ -26,7 +26,7 @@ export const Themes = {
     surface: "#FFFFFF",
     border: "#D1D5DB",
 
-    textPrimary: "#333333",
+    textPrimary: "#295185",
     textSecondary: "#777777",
     label: "#1E3A5F",
 
@@ -40,11 +40,16 @@ export const Themes = {
     gradient: {
       start: "#FF6B35",
       end: "#F7931E",
-      tab: {
-        active: "#295185", // primary dark blue
-        inactive: "#777777", // gray
-        background: "#F5F5F5",
-      },
+    },
+    tab: {
+      active: "#295185", // primary dark blue
+      inactive: "#777777", // gray
+      background: "#F5F5F5",
+    },
+    header: {
+      title: "#FFFFFF",
+      subtitle: "#295185",
+      message: "#FFFFFF",
     },
   },
   dark: {
@@ -55,7 +60,7 @@ export const Themes = {
     surface: "#1F2933",
     border: "#374151",
 
-    textPrimary: "#F3F4F6",
+    textPrimary: "#fdfdfd",
     textSecondary: "#9CA3AF",
     label: "#E5E7EB",
 
@@ -69,11 +74,16 @@ export const Themes = {
     gradient: {
       start: "#FF6B35",
       end: "#F7931E",
-      tab: {
-        active: "#F7931E", // orange
-        inactive: "#AAAAAA", // gray
-        background: "#121212", // or your dark bg
-      },
+    },
+    tab: {
+      active: "#F7931E", // orange
+      inactive: "#AAAAAA", // gray
+      background: "#121212", // or your dark bg
+    },
+    header: {
+      title: "#121212",
+      subtitle: "#777777",
+      message: "#121212",
     },
   },
 };

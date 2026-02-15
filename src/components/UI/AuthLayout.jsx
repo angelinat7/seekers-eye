@@ -3,15 +3,18 @@ import {
   ScrollView,
   Platform,
   StyleSheet,
+  View,
   Animated,
   Keyboard,
 } from "react-native";
+import { useTheme } from "../../context/theme/ThemeContext";
 import Header from "./Header";
-import { use, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 
-export default function AuthLayout({ children, purpose, authVariant }) {
+export default function AuthLayout({ children, variant = "AUTH_LOGIN" }) {
+  const { theme } = useTheme();
   const scrollRef = useRef(null);
-  const keyboardHeight = use(new Animated.View(0)).current;
+  const keyboardHeight = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     const showSub = Keyboard.addListener("keyboardDidShow", (e) => {
@@ -36,21 +39,22 @@ export default function AuthLayout({ children, purpose, authVariant }) {
       hideSub.remove();
     };
   }, []);
-
   return (
     <KeyboardAvoidingView
-      style={{ flex: 1 }}
+      style={[styles.container, { backgroundColor: theme.background }]}
       behavior={Platform.OS === "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
     >
       <ScrollView
         keyboardShouldPersistTaps="handled"
-        contentContainerStyle={styles.container}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
         ref={scrollRef}
       >
         <Animated.View>
-          <Header purpose={purpose} authVariant={authVariant} />
+          <Header variant={variant} />
         </Animated.View>
-        {children}
+        <View style={styles.content}>{children}</View>
       </ScrollView>
     </KeyboardAvoidingView>
   );
@@ -58,7 +62,15 @@ export default function AuthLayout({ children, purpose, authVariant }) {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  scrollContent: {
     flexGrow: 1,
     paddingBottom: 40,
+  },
+  content: {
+    paddingHorizontal: 16,
+    marginTop: 24,
+    gap: 16,
   },
 });

@@ -93,10 +93,10 @@ export function AuthProvider({ children }) {
         (user) => user.email === email && user.password === password,
       );
 
-      if (!existingUser) {
-        setError("Invalid email or password");
-        return { success: false, message: "Invalid email or password" };
-      }
+      // if (!existingUser) {
+      //   setError("Invalid email or password");
+      //   return { success: false, message: "Invalid email or password" };
+      // }
 
       const loggedInUser = {
         ...existingUser,

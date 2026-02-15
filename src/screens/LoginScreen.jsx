@@ -1,114 +1,126 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
+import { useTheme } from "../context/theme/ThemeContext";
+import { useAuth } from "../context/auth/AuthContext";
 import AuthLayout from "../components/UI/AuthLayout";
-import PrimaryButton from "../components/UI/PrimaryButton";
-import TextButton from "../components/UI/TextButton";
-import { Colors } from "../constants/Colors";
-import { RedirectTargets } from "../constants/navigation";
+import ButtonPrimary from "../components/UI/buttons/ButtonPrimary";
+import ButtonLink from "../components/UI/buttons/ButtonLink";
+import { REDIRECT_ROUTES, RedirectTargets } from "../constants/navigation";
+import { useState } from "react";
+import FormInput from "../components/UI/FormInput";
 
 export default function LoginScreen({ navigation, route }) {
+  const { theme } = useTheme();
+  const { login } = useAuth();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const redirectTo = route.params?.redirectTo ?? RedirectTargets.HOME;
 
-  const handleLoginSuccess = () => {
-    switch (redirectTo) {
-      case RedirectTargets.ADD_PHOTO:
-        navigation.replace("TabNavigator", { screen: "Upload" });
-        break;
-      case RedirectTargets.PROFILE:
-        navigation.replace("TabNavigator", { screen: "Profile" });
-        break;
-      case RedirectTargets.HOME:
-        navigation.replace("TabNavigator", { screen: "Home" });
-        break;
+  const handleLoginSuccess = async () => {
+    if (!email || !password) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
     }
+
+    setLoading(true);
+    const res = await login(email, password);
+    setLoading(false);
+
+    if (!res.success) {
+      Alert.alert("Login Failed", res.message);
+      return;
+    }
+
+    const targetRoute =
+      REDIRECT_ROUTES[redirectTo] || REDIRECT_ROUTES[RedirectTargets.HOME];
+    navigation.replace("TabNavigator", targetRoute);
+  };
+
+  const handleNavigateToRegister = () => {
+    navigation.navigate("Register", { redirectTo });
+  };
+
+  const handleContinueAsGuest = () => {
+    navigation.replace("TabNavigator", { screen: "Home" });
   };
 
   return (
-    <AuthLayout purpose="AUTH" authVariant={"login"}>
-      <View style={styles.formContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your email"
-            // keyboardType="email-address"
-            autoCapitalize="none"
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="••••••••"
-            secureTextEntry
-          />
-        </View>
-        <PrimaryButton
-          title="Login"
-          iconName="log-in-outline"
-          onPress={handleLoginSuccess}
+    <AuthLayout variant="AUTH_LOGIN">
+      <View style={[styles.formContainer, { paddingHorizontal: 0 }]}>
+        <FormInput
+          label="Email"
+          placeholder="Enter your email"
+          value={email}
+          onChangeText={setEmail}
+          theme={theme}
+          editable={!loading}
+          autoCapitalize="none"
         />
-        <View style={styles.buttonRow}>
-          <Text style={styles.info}>Don't have an account?</Text>
-          <TextButton
-            title="Register here"
-            color="accent"
-            onPress={() =>
-              navigation.navigate("Register", {
-                redirectTo,
-              })
-            }
+
+        <FormInput
+          label="Password"
+          placeholder="Your password"
+          value={password}
+          onChangeText={setPassword}
+          theme={theme}
+          editable={!loading}
+          secureTextEntry
+          autoCapitalize="none"
+          autoComplete="off"
+          textContentType="password"
+        />
+        <View style={styles.buttonPrimaryContainer}>
+          <ButtonPrimary
+            title="Login"
+            iconName="log-in-outline"
+            onPress={handleLoginSuccess}
+            disabled={loading}
           />
         </View>
-        <View style={styles.textButtonContainer}>
-          <TextButton
+
+        <View style={styles.buttonRow}>
+          <Text style={[styles.info, { color: theme.textSecondary }]}>
+            Don't have an account?
+          </Text>
+          <ButtonLink
+            title="Register here"
+            colorKey="accent"
+            onPress={handleNavigateToRegister}
+          />
+        </View>
+
+        <View style={styles.buttonLinkContainer}>
+          <ButtonLink
             title="Continue as guest"
-            color="textSecondary"
-            onPress={() => navigation.navigate("Register", { redirectTo })}
+            colorKey="textSecondary"
+            onPress={handleContinueAsGuest}
           />
         </View>
       </View>
     </AuthLayout>
   );
 }
+
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   formContainer: {
     width: "100%",
-    marginTop: 30,
-    paddingHorizontal: 20,
-  },
-  inputContainer: {
-    paddingVertical: 16,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: Colors.label,
-    marginBottom: 8,
-  },
-  input: {
-    padding: 12,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    backgroundColor: Colors.background,
-    borderRadius: 8,
-    color: Colors.textPrimary,
+    gap: 8,
   },
   info: {
     fontSize: 14,
-    color: Colors.textSecondary,
   },
   buttonRow: {
     flexDirection: "row",
     alignItems: "baseline",
-    gap: 10,
+    gap: 8,
     justifyContent: "center",
-    marginTop: 16,
+    marginTop: 14,
   },
-  textButtonContainer: {
-    marginTop: 20,
+  buttonPrimaryContainer: {
+    paddingTop: 14,
+  },
+  buttonLinkContainer: {
     alignItems: "center",
   },
 });

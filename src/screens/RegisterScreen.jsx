@@ -1,62 +1,113 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { useState } from "react";
+import { Alert, StyleSheet, Text, View } from "react-native";
 import AuthLayout from "../components/UI/AuthLayout";
-import PrimaryButton from "../components/UI/PrimaryButton";
-import TextButton from "../components/UI/TextButton";
-import { Colors } from "../constants/Colors";
-import { RedirectTargets } from "../constants/navigation";
+import ButtonLink from "../components/UI/buttons/ButtonLink";
+import ButtonPrimary from "../components/UI/buttons/ButtonPrimary";
+import FormInput from "../components/UI/FormInput";
+import { REDIRECT_ROUTES, RedirectTargets } from "../constants/navigation";
+import { useAuth } from "../context/auth/AuthContext";
+import { useTheme } from "../context/theme/ThemeContext";
 
 export default function RegisterScreen({ navigation, route }) {
-  const redirectTo = route.params?.redirectTo;
+  const { theme } = useTheme();
+  const { register, login } = useAuth();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleRegisterSuccess = () => {
-    switch (redirectTo) {
-      case RedirectTargets.ADD_PHOTO:
-        navigation.replace("TabNavigator", { screen: "Upload" });
-        break;
-      case RedirectTargets.PROFILE:
-        navigation.replace("TabNavigator", { screen: "Profile" });
-        break;
-      case RedirectTargets.HOME:
-        navigation.replace("TabNavigator", { screen: "Home" });
-        break;
+  const redirectTo = route.params?.redirectTo ?? RedirectTargets.HOME;
+
+  const handleRegisterSuccess = async () => {
+    if (!username || !email || !password) {
+      Alert.alert("Error", "Please fill in all fields");
+      return;
     }
+
+    // if (password.length < 6) {
+    //   Alert.alert("Error", "Password must be at least 6 characters");
+    //   return;
+    // }
+
+    setLoading(true);
+
+    const registerRes = await register({ username, email, password });
+    if (!registerRes.success) {
+      Alert.alert("Registration Failed", registerRes.message);
+      setLoading(false);
+      return;
+    }
+
+    const loginRes = await login(email, password);
+    setLoading(false);
+
+    if (!loginRes.success) {
+      Alert.alert("Login Failed", loginRes.message);
+      return;
+    }
+
+    Alert.alert("Success", "Account created successfully!");
+    const targetRoute =
+      REDIRECT_ROUTES[redirectTo] || REDIRECT_ROUTES[RedirectTargets.HOME];
+    navigation.replace("TabNavigator", targetRoute);
+  };
+
+  const handleNavigateToLogin = () => {
+    navigation.navigate("Login", { redirectTo });
   };
 
   return (
-    <AuthLayout purpose="AUTH" authVariant={"register"}>
-      <View style={styles.formContainer}>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Name</Text>
-          <TextInput style={styles.input} placeholder="Your name" />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Email</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="your@email.com"
-            keyboardType="email-address"
-            autoCapitalize="none"
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Password</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="••••••••"
-            secureTextEntry
-          />
-        </View>
-        <PrimaryButton
-          title="Register"
-          iconName="person-add-outline"
-          onPress={handleRegisterSuccess}
+    <AuthLayout variant="AUTH_REGISTER">
+      <View style={[styles.formContainer, { paddingHorizontal: 0 }]}>
+        <FormInput
+          label="Name"
+          placeholder="Your name"
+          value={username}
+          onChangeText={setUsername}
+          theme={theme}
+          editable={!loading}
         />
+
+        <FormInput
+          label="Email"
+          placeholder="your@email.com"
+          value={email}
+          onChangeText={setEmail}
+          theme={theme}
+          editable={!loading}
+          keyboardType="email-address"
+          autoCapitalize="none"
+        />
+
+        <FormInput
+          label="Password"
+          placeholder="••••••••"
+          value={password}
+          onChangeText={setPassword}
+          theme={theme}
+          editable={!loading}
+          secureTextEntry
+          autoCapitalize="none"
+          autoComplete="off"
+          textContentType="password"
+        />
+        <View style={styles.buttonPrimaryContainer}>
+          <ButtonPrimary
+            title="Register"
+            iconName="person-add-outline"
+            onPress={handleRegisterSuccess}
+            disabled={loading}
+          />
+        </View>
+
         <View style={styles.buttonRow}>
-          <Text style={styles.info}>Already have an account?</Text>
-          <TextButton
+          <Text style={[styles.info, { color: theme.textSecondary }]}>
+            Already have an account?
+          </Text>
+          <ButtonLink
             title="Login here"
-            color="accent"
-            onPress={() => navigation.navigate("Login", { redirectTo })}
+            colorKey="accent"
+            onPress={handleNavigateToLogin}
           />
         </View>
       </View>
@@ -64,41 +115,21 @@ export default function RegisterScreen({ navigation, route }) {
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
+export const styles = StyleSheet.create({
   formContainer: {
     width: "100%",
-    marginTop: 30,
-    paddingHorizontal: 20,
-  },
-  inputContainer: {
-    paddingVertical: 16,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: "bold",
-    color: Colors.label,
-    marginBottom: 8,
-  },
-  input: {
-    padding: 12,
-    paddingHorizontal: 15,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    backgroundColor: Colors.background,
-    borderRadius: 8,
-    color: Colors.textPrimary,
+    gap: 8,
   },
   info: {
     fontSize: 14,
-    color: Colors.textSecondary,
+  },
+  buttonPrimaryContainer: {
+    paddingTop: 14,
   },
   buttonRow: {
     flexDirection: "row",
     alignItems: "baseline",
-    gap: 10,
+    gap: 8,
     justifyContent: "center",
     marginTop: 16,
   },
