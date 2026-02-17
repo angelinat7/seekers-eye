@@ -1,7 +1,7 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
 import ButtonOutlined from "../components/UI/buttons/ButtonOutlined";
 import Header from "../components/UI/Header";
-import PhotoCard from "../components/UI/PhotoCard";
+import ProfilePhotoCard from "../components/UI/photo-cards/ProfilePhotoCard";
 import ThemeSwitch from "../components/UI/ThemeSwitch";
 import { useAuth } from "../context/auth/AuthContext";
 import { useTheme } from "../context/theme/ThemeContext";
@@ -155,7 +155,9 @@ export default function ProfileScreen({ navigation }) {
               contentContainerStyle={{ gap: 10 }}
               data={userPhotos}
               showsVerticalScrollIndicator={false}
-              renderItem={({ item }) => <PhotoCard item={item} theme={theme} />}
+              renderItem={({ item }) => (
+                <ProfilePhotoCard item={item} theme={theme} />
+              )}
               keyExtractor={(item) => item.id}
             />
           )}

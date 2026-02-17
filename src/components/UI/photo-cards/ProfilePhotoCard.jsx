@@ -2,7 +2,7 @@ import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 
-export default function PhotoCard({ item, theme }) {
+export default function ProfilePhotoCard({ item, theme }) {
   const navigation = useNavigation();
   const editPhotoHandler = () => {
     navigation.navigate("EditPhoto", { photo: item });

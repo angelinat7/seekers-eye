@@ -16,6 +16,11 @@ export const Colors = {
     end: "#F7931E",
   },
 };
+export const badge = {
+  text: "#fff",
+  bgOpen: "#22C55E",
+  bgClosed: "#777777",
+};
 
 export const themes = {
   light: {
@@ -51,6 +56,7 @@ export const themes = {
       subtitle: "#295185",
       message: "#FFFFFF",
     },
+    ShadowColor: "#000000",
   },
   dark: {
     primary: "#4C7DB8",
@@ -85,5 +91,6 @@ export const themes = {
       subtitle: "#777777",
       message: "#121212",
     },
+    shadowColor: "#FFFFFF",
   },
 };
