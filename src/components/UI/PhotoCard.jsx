@@ -1,7 +1,12 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 export default function PhotoCard({ item, theme }) {
+  const navigation = useNavigation();
+  const editPhotoHandler = () => {
+    navigation.navigate("EditPhoto", { photo: item });
+  };
   return (
     <View style={[styles.container, { backgroundColor: theme.surface }]}>
       <Image source={{ uri: item.imageUrl }} style={styles.image} />
@@ -21,7 +26,7 @@ export default function PhotoCard({ item, theme }) {
         </View>
 
         <View style={styles.actionButtonsContainer}>
-          <Pressable style={styles.actionButton}>
+          <Pressable style={styles.actionButton} onPress={editPhotoHandler}>
             <Ionicons name="create-outline" size={12} color={theme.info} />
             <Text style={[styles.actionText, { color: theme.info }]}>Edit</Text>
           </Pressable>

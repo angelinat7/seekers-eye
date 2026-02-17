@@ -8,6 +8,7 @@ export default function ButtonPrimary({
   iconName,
   disabled = false,
   onPress,
+  style,
 }) {
   const { theme } = useTheme();
 
@@ -19,6 +20,7 @@ export default function ButtonPrimary({
         styles.button,
         pressed && styles.pressed,
         disabled && styles.disabled,
+        style,
       ]}
     >
       {({ pressed }) => (

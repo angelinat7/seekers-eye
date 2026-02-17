@@ -23,14 +23,13 @@ export default function ButtonOutlined({
         {
           borderColor: buttonColor,
           backgroundColor: pressed ? `${buttonColor}15` : "transparent",
-          // backgroundColor: pressed ? `${theme.secondary}15` : "transparent",
         },
         pressed && styles.pressed,
         disabled && styles.disabled,
         style,
       ]}
     >
-      <View style={[styles.iconContainer]}>
+      <View style={[styles.iconContainer, !title && { gap: 0 }]}>
         {iconName && (
           <Ionicons size={size} name={iconName} color={buttonColor} />
         )}
@@ -42,7 +41,7 @@ export default function ButtonOutlined({
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 12,
+    paddingVertical: 8,
     paddingHorizontal: 16,
     borderWidth: 2,
     borderRadius: 8,

@@ -16,4 +16,10 @@ export const HEADER_VARIANTS = {
     showMessage: true,
     message: "Create an account to start sharing",
   },
+  EDIT_PHOTO: {
+    showSubtitle: true,
+    showTagline: false,
+    showMessage: true,
+    message: "Manage your submission",
+  },
 };

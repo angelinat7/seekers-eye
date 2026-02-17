@@ -5,6 +5,8 @@ export default function FormInput({
   theme,
   editable = true,
   secureTextEntry = false,
+  multiline = false,
+  style,
   ...props
 }) {
   return (
@@ -14,14 +16,17 @@ export default function FormInput({
         {...props}
         editable={editable}
         secureTextEntry={secureTextEntry}
+        multiline={multiline}
         style={[
           styles.input,
+          multiline && styles.multilineInput,
           {
             borderColor: theme.border,
             backgroundColor: theme.surface,
             color: theme.textPrimary,
           },
           !editable && styles.disabled,
+          style,
         ]}
         placeholderTextColor={theme.textSecondary}
       />
@@ -31,7 +36,7 @@ export default function FormInput({
 
 export const styles = StyleSheet.create({
   inputContainer: {
-    paddingVertical: 12,
+    paddingVertical: 10,
   },
   label: {
     fontSize: 16,
@@ -44,6 +49,10 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     fontSize: 16,
+  },
+  multilineInput: {
+    height: 100,
+    textAlignVertical: "top",
   },
   disabled: {
     opacity: 0.6,

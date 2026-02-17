@@ -1,10 +1,8 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo } from "react";
 import { useColorScheme } from "react-native";
-import { STORAGE_KEY } from "../../constants/async-storage";
 import { themes } from "../../constants/themes";
-import { ThemeContext } from "./ThemeContext";
 import { useThemeStorage } from "../../hooks/useThemeStorage";
+import { ThemeContext } from "./ThemeContext";
 
 export function ThemeProvider({ children }) {
   const systemScheme = useColorScheme();
