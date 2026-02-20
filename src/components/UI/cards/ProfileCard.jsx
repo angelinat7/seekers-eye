@@ -22,7 +22,10 @@ export default function ProfileCard({ user, theme, onEditProfileHandler }) {
             </Text>
           </View>
         </View>
-        <TouchableOpacity onPress={onEditProfileHandler}>
+        <TouchableOpacity
+          onPress={onEditProfileHandler}
+          style={{ paddingTop: 2 }}
+        >
           <Ionicons name="settings-outline" size={20} color={theme.accent} />
         </TouchableOpacity>
       </View>

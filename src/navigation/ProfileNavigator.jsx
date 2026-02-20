@@ -17,6 +17,7 @@ export default function ProfileNavigator() {
         component={EditProfilePhotoModal}
         options={{
           presentation: "modal",
+          animation: "fade_from_bottom",
         }}
       />
     </Stack.Navigator>

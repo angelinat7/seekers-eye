@@ -11,7 +11,7 @@ export default function FormInput({
   ...props
 }) {
   return (
-    <View style={styles.inputContainer}>
+    <View>
       <Text style={[styles.label, { color: theme.label }]}>{label}</Text>
       <TextInput
         {...props}
@@ -32,16 +32,13 @@ export default function FormInput({
         placeholderTextColor={theme.textSecondary}
       />
       <Text style={[styles.message, { color: theme.textSecondary }]}>
-        {message ?? null}
+        {message ? message : null}
       </Text>
     </View>
   );
 }
 
 export const styles = StyleSheet.create({
-  inputContainer: {
-    paddingVertical: 8,
-  },
   label: {
     fontSize: 14,
     fontWeight: "bold",
@@ -52,10 +49,10 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 15,
     borderWidth: 1,
     borderRadius: 8,
-    fontSize: 16,
+    fontSize: 14,
   },
   multilineInput: {
-    height: 100,
+    height: 60,
     textAlignVertical: "top",
   },
   message: {

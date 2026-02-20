@@ -81,7 +81,13 @@ export default function EditProfilePhotoModal({ navigation, route }) {
   return (
     <View style={styles.container}>
       <Header variant="EDIT_PROFILE_PHOTO" />
-      <View style={{ paddingLeft: 20, paddingVertical: 10 }}>
+      <View
+        style={{
+          paddingLeft: 20,
+          paddingVertical: 10,
+          backgroundColor: theme.background,
+        }}
+      >
         <ButtonLink
           iconName="arrow-back"
           iconSize={18}
