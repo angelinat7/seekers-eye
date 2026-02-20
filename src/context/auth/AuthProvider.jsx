@@ -57,7 +57,7 @@ export function AuthProvider({ children }) {
         username: userInput.username,
         email: userInput.email,
         password: userInput.password, // Temp - will be removed with real backend
-        token: uuid.v4(),
+        avatar: "",
       };
 
       const updatedUsers = [...fakeUsers, userData];
@@ -100,7 +100,6 @@ export function AuthProvider({ children }) {
 
       const loggedInUser = {
         ...existingUser,
-        token: uuid.v4(),
       };
 
       // Persist to storage
@@ -133,6 +132,33 @@ export function AuthProvider({ children }) {
     setError(null);
   };
 
+  const updateUser = async (updates) => {
+    try {
+      if (!user) return;
+
+      // Merge the updates with current user
+      const updatedUser = { ...user, ...updates };
+
+      // Update fakeUsers array
+      const updatedFakeUsers = fakeUsers.map((u) =>
+        u.id === updatedUser.id ? updatedUser : u,
+      );
+
+      // Persist changes
+      await AsyncStorage.setItem(AUTH_STORAGE_KEY, JSON.stringify(updatedUser));
+      await AsyncStorage.setItem(
+        USERS_STORAGE_KEY,
+        JSON.stringify(updatedFakeUsers),
+      );
+
+      // Update state
+      setUser(updatedUser);
+      setFakeUsers(updatedFakeUsers);
+    } catch (e) {
+      console.warn("Failed to update user", e.message);
+    }
+  };
+
   const authData = {
     user,
     isAuthenticated: !!user,
@@ -142,62 +168,10 @@ export function AuthProvider({ children }) {
     register,
     logout,
     clearError,
+    updateUser,
   };
 
   return (
     <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
   );
 }
-// export function AuthProvider({ children }) {
-//   const [user, setUser] = useState(null);
-
-//   const [fakeUsers, setFakeUsers] = useState([]);
-
-//   const register = (userInput) => {
-//     const userData = {
-//       id: uuid.v4(),
-//       username: userInput.username,
-//       email: userInput.email,
-//       password: userInput.password,
-//       token: uuid.v4(),
-//     };
-//     setUser(userData);
-//     setFakeUsers((prevFakeUsers) => [...prevFakeUsers, userData]);
-
-//     return { success: true };
-//   };
-
-//   const login = (email, password) => {
-//     const existingUser = fakeUsers.find(
-//       (user) => user.email === email && user.password === password,
-//     );
-
-//     if (!existingUser) {
-//       return { success: false, message: "Invalid email or password" };
-//     }
-
-//     const loggedInUser = {
-//       ...existingUser,
-//       token: uuid.v4(),
-//     };
-//     setUser(loggedInUser);
-//     console.log(loggedInUser);
-
-//     return { success: true };
-//   };
-
-//   const logout = () => {
-//     setUser(null);
-//   };
-
-//   const authData = {
-//     user,
-//     isAuthenticated: !!user,
-//     login,
-//     register,
-//     logout,
-//   };
-//   return (
-//     <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>
-//   );
-// }

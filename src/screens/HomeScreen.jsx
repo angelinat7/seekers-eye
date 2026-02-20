@@ -1,6 +1,6 @@
 import { FlatList, StyleSheet, View } from "react-native";
 import Header from "../components/UI/Header";
-import ContestPhotoCard from "../components/UI/photo-cards/ContestPhotoCard";
+import ContestPhotoCard from "../components/UI/cards/ContestPhotoCard";
 import { useTheme } from "../context/theme/ThemeContext";
 const mockPhotos = [
   {

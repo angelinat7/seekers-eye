@@ -1,16 +1,12 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import ButtonOutlined from "../components/UI/buttons/ButtonOutlined";
+import ButtonPrimary from "../components/UI/buttons/ButtonPrimary";
 import Header from "../components/UI/Header";
-import ProfilePhotoCard from "../components/UI/photo-cards/ProfilePhotoCard";
+import ProfilePhotoCard from "../components/UI/cards/ProfilePhotoCard";
 import ThemeSwitch from "../components/UI/ThemeSwitch";
 import { useAuth } from "../context/auth/AuthContext";
 import { useTheme } from "../context/theme/ThemeContext";
 import { CommonActions } from "@react-navigation/native";
-
-const mockUser = {
-  name: "John Doe",
-  email: "john@example.com",
-};
+import ProfileCard from "../components/UI/cards/ProfileCard";
 
 const userPhotos = [
   {
@@ -99,9 +95,13 @@ const userPhotos = [
 // const userPhotos = [];
 export default function ProfileScreen({ navigation }) {
   const { theme, mode, changeMode, ready } = useTheme();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
-  if (!ready || !theme) return null;
+  // if (!ready || !theme) return null;
+
+  const onEditProfileHandler = () => {
+    navigation.navigate("EditProfile");
+  };
 
   const logoutHandler = () => {
     logout();
@@ -116,27 +116,20 @@ export default function ProfileScreen({ navigation }) {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
-      <Header purpose="HOME" />
+      <Header variant="PROFILE" />
       <View style={styles.innerContainer}>
-        <View style={[styles.userCard, { backgroundColor: theme.surface }]}>
-          <View style={styles.userInfo}>
-            <Text style={[styles.userName, { color: theme.primary }]}>
-              {mockUser.name}
-            </Text>
-            <Text style={[styles.userEmail, { color: theme.primary }]}>
-              {mockUser.email}
-            </Text>
-          </View>
-          <View style={styles.editButton}>
-            <ButtonOutlined title="Edit" iconName="create-outline" size={18} />
-          </View>
+        <ProfileCard
+          user={user}
+          onEditProfileHandler={onEditProfileHandler}
+          theme={theme}
+        />
+        <View style={styles.sectionTitleContainer}>
+          <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
+            My Photos ({userPhotos.length})
+          </Text>
+          <ThemeSwitch theme={theme} mode={mode} onChange={changeMode} />
         </View>
 
-        <ThemeSwitch theme={theme} mode={mode} onChange={changeMode} />
-
-        <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
-          My Photos ({userPhotos.length})
-        </Text>
         <View style={styles.scrollContent}>
           {userPhotos.length === 0 ? (
             <View style={styles.emptyState}>
@@ -163,7 +156,7 @@ export default function ProfileScreen({ navigation }) {
           )}
         </View>
         <View style={styles.logoutButtonContainer}>
-          <ButtonOutlined
+          <ButtonPrimary
             title="Logout"
             onPress={logoutHandler}
             iconName={"log-out-outline"}
@@ -180,28 +173,17 @@ const styles = StyleSheet.create({
   },
   innerContainer: {
     paddingHorizontal: 16,
-    paddingVertical: 18,
+    paddingVertical: 12,
     flex: 1,
   },
   scrollContent: {
     flex: 1,
   },
-  userCard: {
-    padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
+  sectionTitleContainer: {
     flexDirection: "row",
-  },
-  userInfo: {
-    flex: 2,
-  },
-  userName: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 2,
-  },
-  userEmail: {
-    fontSize: 14,
+    justifyContent: "space-between",
+    alignItems: "baseline",
+    marginBottom: 16,
   },
   sectionTitle: {
     fontSize: 16,

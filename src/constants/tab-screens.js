@@ -1,5 +1,5 @@
 import HomeScreen from "../screens/HomeScreen";
-import UploadPhoto from "../screens/UploadPhoto";
+import AddPhotoScreen from "../screens/AddPhotoScreen";
 import ProfileNavigator from "../navigation/ProfileNavigator";
 import { RedirectTargets } from "../constants/navigation";
 
@@ -12,8 +12,8 @@ export const TAB_SCREENS = [
     requiresAuth: false,
   },
   {
-    name: "Upload",
-    component: UploadPhoto,
+    name: "Add Photo",
+    component: AddPhotoScreen,
     title: "Add Photo",
     icon: "add-circle-outline",
     requiresAuth: true,

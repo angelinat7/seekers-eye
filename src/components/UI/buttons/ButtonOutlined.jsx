@@ -7,7 +7,7 @@ export default function ButtonOutlined({
   iconName,
   disabled = false,
   onPress,
-  size = 24,
+  size = 18,
   color,
   style,
 }) {
@@ -41,7 +41,7 @@ export default function ButtonOutlined({
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 8,
+    paddingVertical: 6,
     paddingHorizontal: 16,
     borderWidth: 2,
     borderRadius: 8,
@@ -53,8 +53,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 14,
+    fontWeight: "600",
     textAlign: "center",
   },
   disabled: {

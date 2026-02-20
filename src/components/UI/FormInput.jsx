@@ -2,6 +2,7 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 
 export default function FormInput({
   label,
+  message,
   theme,
   editable = true,
   secureTextEntry = false,
@@ -30,21 +31,24 @@ export default function FormInput({
         ]}
         placeholderTextColor={theme.textSecondary}
       />
+      <Text style={[styles.message, { color: theme.textSecondary }]}>
+        {message ?? null}
+      </Text>
     </View>
   );
 }
 
 export const styles = StyleSheet.create({
   inputContainer: {
-    paddingVertical: 10,
+    paddingVertical: 8,
   },
   label: {
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: "bold",
     marginBottom: 8,
   },
   input: {
-    padding: 12,
+    padding: 8,
     paddingHorizontal: 15,
     borderWidth: 1,
     borderRadius: 8,
@@ -53,6 +57,11 @@ export const styles = StyleSheet.create({
   multilineInput: {
     height: 100,
     textAlignVertical: "top",
+  },
+  message: {
+    fontSize: 10,
+    paddingTop: 2,
+    paddingLeft: 4,
   },
   disabled: {
     opacity: 0.6,
