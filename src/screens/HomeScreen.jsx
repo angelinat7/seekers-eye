@@ -21,7 +21,7 @@ const mockPhotos = [
     title: "Mountain Lake",
     likes: 98,
     description:
-      "A crystal-clear lake surrounded by towering mountain peaks. The calm water perfectly reflects the sky and rugged landscape.",
+      "A crystal-clear lake surrounded by towering mountain peaks. The calm water perfectly reflects the sky and rugged landscape. A crystal-clear lake surrounded by towering mountain peaks. The calm water perfectly reflects the sky and rugged landscape",
     imageUrl:
       "https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=400",
   },
@@ -139,6 +139,9 @@ const mockPhotos = [
 
 export default function HomeScreen({ navigation }) {
   const { theme } = useTheme();
+  const pressHandler = () => {
+    navigation.navigate("PhotoDetailScreen", { item });
+  };
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header purpose="HOME" />
@@ -149,9 +152,7 @@ export default function HomeScreen({ navigation }) {
         renderItem={({ item }) => (
           <ContestPhotoCard
             photo={item}
-            // onPress={() =>
-            //   navigation.navigate("PhotoDetailScreen", { id: item.id })
-            // }
+            onPress={() => navigation.navigate("Details", { item })}
           />
         )}
         contentContainerStyle={styles.listContent}

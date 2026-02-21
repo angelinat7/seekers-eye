@@ -2,11 +2,12 @@ import HomeScreen from "../screens/HomeScreen";
 import AddPhotoScreen from "../screens/AddPhotoScreen";
 import ProfileNavigator from "../navigation/ProfileNavigator";
 import { RedirectTargets } from "../constants/navigation";
+import HomeNavigator from "../navigation/HomeNavigator";
 
 export const TAB_SCREENS = [
   {
-    name: "Home",
-    component: HomeScreen,
+    name: "HomeTab",
+    component: HomeNavigator,
     title: "Home",
     icon: "home",
     requiresAuth: false,
