@@ -1,8 +1,5 @@
-import { useContext } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { themes } from "../../constants/themes";
-import { useTheme } from "@react-navigation/native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
 export default function ThemeSwitch({ mode, onChange, theme }) {
   const options = [
@@ -27,7 +24,7 @@ export default function ThemeSwitch({ mode, onChange, theme }) {
           >
             <Ionicons
               name={option.icon}
-              size={18}
+              size={14}
               color={isActive ? "white" : theme.primary}
             />
             <Text
@@ -48,20 +45,18 @@ export default function ThemeSwitch({ mode, onChange, theme }) {
 const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
-    gap: 10,
-    marginBottom: 20,
+    gap: 8,
   },
   option: {
     flexDirection: "row",
-    padding: 8,
-    borderRadius: 10,
-    flex: 1,
-    gap: 10,
+    padding: 6,
+    borderRadius: 8,
+    gap: 2,
     justifyContent: "center",
     alignItems: "center",
   },
   label: {
-    fontSize: 12,
-    fontWeight: 500,
+    fontSize: 10,
+    fontWeight: 400,
   },
 });

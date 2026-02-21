@@ -8,6 +8,7 @@ export default function ButtonPrimary({
   iconName,
   disabled = false,
   onPress,
+  style,
 }) {
   const { theme } = useTheme();
 
@@ -19,6 +20,7 @@ export default function ButtonPrimary({
         styles.button,
         pressed && styles.pressed,
         disabled && styles.disabled,
+        style,
       ]}
     >
       {({ pressed }) => (
@@ -34,7 +36,7 @@ export default function ButtonPrimary({
         >
           <View style={styles.iconContainer}>
             {iconName && (
-              <Ionicons size={24} name={iconName} color={theme.surface} />
+              <Ionicons size={18} name={iconName} color={theme.surface} />
             )}
             <Text style={[styles.title, { color: theme.surface }]}>
               {title}
@@ -53,7 +55,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   gradient: {
-    paddingVertical: 12,
+    paddingVertical: 8,
     paddingHorizontal: 16,
   },
   iconContainer: {
@@ -63,8 +65,8 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   title: {
-    fontSize: 16,
-    fontWeight: "bold",
+    fontSize: 14,
+    fontWeight: "600",
     textAlign: "center",
   },
   disabled: {

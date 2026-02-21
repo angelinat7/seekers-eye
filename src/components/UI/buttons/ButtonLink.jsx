@@ -1,10 +1,13 @@
 import { Pressable, Text, StyleSheet } from "react-native";
 import { useTheme } from "../../../context/theme/ThemeContext";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function ButtonLink({
   title,
   colorKey = "primary",
   size = "md",
+  iconName,
+  iconSize = 16,
   disabled = false,
   onPress,
 }) {
@@ -28,6 +31,14 @@ export default function ButtonLink({
         disabled && styles.disabled,
       ]}
     >
+      {iconName && (
+        <Ionicons
+          name={iconName}
+          size={iconSize}
+          color={theme[colorKey]}
+          style={{ marginRight: 6 }}
+        />
+      )}
       <Text style={{ color: theme[colorKey], fontWeight: "bold" }}>
         {title}
       </Text>
@@ -39,6 +50,8 @@ const styles = StyleSheet.create({
   button: {
     fontWeight: "bold",
     paddingVertical: 4,
+    flexDirection: "row",
+    alignItems: "center",
   },
   pressed: {
     opacity: 0.7,

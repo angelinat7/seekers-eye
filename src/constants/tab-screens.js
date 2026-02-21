@@ -1,21 +1,30 @@
 import HomeScreen from "../screens/HomeScreen";
-import UploadPhoto from "../screens/UploadPhoto";
+import AddPhotoScreen from "../screens/AddPhotoScreen";
 import ProfileNavigator from "../navigation/ProfileNavigator";
 import { RedirectTargets } from "../constants/navigation";
+import HomeNavigator from "../navigation/HomeNavigator";
+import InformationScreen from "../screens/InformationScreen";
 
 export const TAB_SCREENS = [
   {
-    name: "Home",
-    component: HomeScreen,
+    name: "HomeTab",
+    component: HomeNavigator,
     title: "Home",
     icon: "home",
     requiresAuth: false,
   },
   {
-    name: "Upload",
-    component: UploadPhoto,
+    name: "Info",
+    component: InformationScreen,
+    title: "Info",
+    icon: "information-circle",
+    requiresAuth: false,
+  },
+  {
+    name: "Add Photo",
+    component: AddPhotoScreen,
     title: "Add Photo",
-    icon: "add-circle-outline",
+    icon: "camera-outline",
     requiresAuth: true,
     redirectTarget: RedirectTargets.ADD_PHOTO,
   },

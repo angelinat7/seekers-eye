@@ -63,7 +63,7 @@ const getSubtitleStyle = (variant) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    borderRadius: 8,
+    // borderRadius: 8,
   },
   title: {
     marginTop: 30,

@@ -10,6 +10,7 @@ export const AuthContext = createContext({
   login() {},
   logout() {},
   clearError() {},
+  updateUser() {},
 });
 
 export function useAuth() {
