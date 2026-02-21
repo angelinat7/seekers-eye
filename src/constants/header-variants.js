@@ -45,4 +45,10 @@ export const HEADER_VARIANTS = {
     showMessage: true,
     message: "Share your vision with others",
   },
+  INFO: {
+    showSubtitle: true,
+    showTagline: true,
+    showMessage: true,
+    message: "Rules & Tips",
+  },
 };

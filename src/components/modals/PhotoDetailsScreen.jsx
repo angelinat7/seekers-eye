@@ -1,10 +1,9 @@
 import { View, Text, Image, ScrollView, StyleSheet } from "react-native";
-import { useTheme } from "../context/theme/ThemeContext";
-import ButtonPrimary from "../components/UI/buttons/ButtonPrimary";
+import { useTheme } from "../../context/theme/ThemeContext";
+import ButtonPrimary from "../UI/buttons/ButtonPrimary";
 import { Ionicons } from "@expo/vector-icons";
-import ButtonLink from "../components/UI/buttons/ButtonLink";
-import { useAuth } from "../context/auth/AuthContext";
-import { useState } from "react";
+import ButtonLink from "../UI/buttons/ButtonLink";
+import { useAuth } from "../../context/auth/AuthContext";
 
 export default function PhotoDetailsScreen({ route, navigation }) {
   const { item } = route.params;

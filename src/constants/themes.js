@@ -42,6 +42,8 @@ export const themes = {
     warning: "#FFC107",
     info: "#2196F3",
 
+    shadowColor: "#000000",
+
     gradient: {
       start: "#FF6B35",
       end: "#F7931E",
@@ -56,7 +58,6 @@ export const themes = {
       subtitle: "#295185",
       message: "#FFFFFF",
     },
-    ShadowColor: "#000000",
   },
   dark: {
     primary: "#4C7DB8",
@@ -77,6 +78,8 @@ export const themes = {
     warning: "#FFD54F",
     info: "#64B5F6",
 
+    shadowColor: "#FFFFFF",
+
     gradient: {
       start: "#FF6B35",
       end: "#F7931E",
@@ -91,6 +94,5 @@ export const themes = {
       subtitle: "#777777",
       message: "#121212",
     },
-    shadowColor: "#FFFFFF",
   },
 };
