@@ -7,11 +7,11 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import ButtonPrimary from "../components/UI/buttons/ButtonPrimary";
-import FormInput from "../components/UI/FormInput";
-import Header from "../components/UI/Header";
-import ImagePickerField from "../components/UI/ImagePickerField";
-import { useTheme } from "../context/theme/ThemeContext";
+import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
+import FormInput from "../../components/UI/FormInput";
+import Header from "../../components/UI/Header";
+import ImagePickerField from "../../components/UI/ImagePickerField";
+import { useTheme } from "../../context/theme/ThemeContext";
 
 export default function AddPhotoScreen() {
   const { theme } = useTheme();
@@ -104,4 +104,3 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
 });
-

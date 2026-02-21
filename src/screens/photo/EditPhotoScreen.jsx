@@ -7,14 +7,14 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import Header from "../components/UI/Header";
+import Header from "../../components/UI/Header";
 
 import { useState } from "react";
-import ButtonLink from "../components/UI/buttons/ButtonLink";
-import ButtonOutlined from "../components/UI/buttons/ButtonOutlined";
-import ButtonPrimary from "../components/UI/buttons/ButtonPrimary";
-import FormInput from "../components/UI/FormInput";
-import { useTheme } from "../context/theme/ThemeContext";
+import ButtonLink from "../../components/UI/buttons/ButtonLink";
+import ButtonOutlined from "../../components/UI/buttons/ButtonOutlined";
+import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
+import FormInput from "../../components/UI/FormInput";
+import { useTheme } from "../../context/theme/ThemeContext";
 
 export default function EditPhotoScreen({ route }) {
   const { theme } = useTheme();

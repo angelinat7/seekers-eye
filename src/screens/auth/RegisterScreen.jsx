@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
-import AuthLayout from "../components/UI/AuthLayout";
-import ButtonLink from "../components/UI/buttons/ButtonLink";
-import ButtonPrimary from "../components/UI/buttons/ButtonPrimary";
-import FormInput from "../components/UI/FormInput";
-import { REDIRECT_ROUTES, RedirectTargets } from "../constants/navigation";
-import { useAuth } from "../context/auth/AuthContext";
-import { useTheme } from "../context/theme/ThemeContext";
+import AuthLayout from "../../components/UI/AuthLayout";
+import ButtonLink from "../../components/UI/buttons/ButtonLink";
+import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
+import FormInput from "../../components/UI/FormInput";
+import { REDIRECT_ROUTES, RedirectTargets } from "../../constants/navigation";
+import { useAuth } from "../../context/auth/AuthContext";
+import { useTheme } from "../../context/theme/ThemeContext";
 
 export default function RegisterScreen({ navigation, route }) {
   const { theme } = useTheme();
@@ -24,10 +24,10 @@ export default function RegisterScreen({ navigation, route }) {
       return;
     }
 
-    // if (password.length < 6) {
-    //   Alert.alert("Error", "Password must be at least 6 characters");
-    //   return;
-    // }
+    if (password.length < 6) {
+      Alert.alert("Error", "Password must be at least 6 characters");
+      return;
+    }
 
     setLoading(true);
 

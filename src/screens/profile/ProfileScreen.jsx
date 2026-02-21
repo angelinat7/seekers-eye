@@ -1,12 +1,12 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import ButtonPrimary from "../components/UI/buttons/ButtonPrimary";
-import Header from "../components/UI/Header";
-import ProfilePhotoCard from "../components/UI/cards/ProfilePhotoCard";
-import ThemeSwitch from "../components/UI/ThemeSwitch";
-import { useAuth } from "../context/auth/AuthContext";
-import { useTheme } from "../context/theme/ThemeContext";
+import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
+import Header from "../../components/UI/Header";
+import ProfilePhotoCard from "../../components/UI/cards/ProfilePhotoCard";
+import ThemeSwitch from "../../components/UI/ThemeSwitch";
+import { useAuth } from "../../context/auth/AuthContext";
+import { useTheme } from "../../context/theme/ThemeContext";
 import { CommonActions } from "@react-navigation/native";
-import ProfileCard from "../components/UI/cards/ProfileCard";
+import ProfileCard from "../../components/UI/cards/ProfileCard";
 
 const userPhotos = [
   {
@@ -203,4 +203,3 @@ const styles = StyleSheet.create({
     marginTop: 16,
   },
 });
-
