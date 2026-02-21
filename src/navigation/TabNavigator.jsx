@@ -1,10 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useAuth } from "../context/auth/AuthContext";
-
 import { TAB_SCREENS } from "../constants/tab-screens";
 import { useTheme } from "../context/theme/ThemeContext";
-import { View } from "react-native";
 
 const Tab = createBottomTabNavigator();
 

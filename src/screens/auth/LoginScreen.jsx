@@ -1,12 +1,12 @@
 import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
-import { useTheme } from "../context/theme/ThemeContext";
-import { useAuth } from "../context/auth/AuthContext";
-import AuthLayout from "../components/UI/AuthLayout";
-import ButtonPrimary from "../components/UI/buttons/ButtonPrimary";
-import ButtonLink from "../components/UI/buttons/ButtonLink";
-import { REDIRECT_ROUTES, RedirectTargets } from "../constants/navigation";
+import { useTheme } from "../../context/theme/ThemeContext";
+import { useAuth } from "../../context/auth/AuthContext";
+import AuthLayout from "../../components/UI/AuthLayout";
+import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
+import ButtonLink from "../../components/UI/buttons/ButtonLink";
+import { REDIRECT_ROUTES, RedirectTargets } from "../../constants/navigation";
 import { useState } from "react";
-import FormInput from "../components/UI/FormInput";
+import FormInput from "../../components/UI/FormInput";
 
 export default function LoginScreen({ navigation, route }) {
   const { theme } = useTheme();

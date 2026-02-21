@@ -9,13 +9,13 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import Avatar from "../components/UI/Avatar";
-import FormInput from "../components/UI/FormInput";
-import Header from "../components/UI/Header";
-import ButtonLink from "../components/UI/buttons/ButtonLink";
-import ButtonPrimary from "../components/UI/buttons/ButtonPrimary";
-import { useAuth } from "../context/auth/AuthContext";
-import { useTheme } from "../context/theme/ThemeContext";
+import Avatar from "../../components/UI/Avatar";
+import FormInput from "../../components/UI/FormInput";
+import Header from "../../components/UI/Header";
+import ButtonLink from "../../components/UI/buttons/ButtonLink";
+import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
+import { useAuth } from "../../context/auth/AuthContext";
+import { useTheme } from "../../context/theme/ThemeContext";
 
 export default function EditProfileScreen() {
   const { theme } = useTheme();
