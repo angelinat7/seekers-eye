@@ -109,7 +109,7 @@ export default function ProfileScreen({ navigation }) {
     navigation.dispatch(
       CommonActions.reset({
         index: 0,
-        routes: [{ name: "Home" }],
+        routes: [{ name: "HomeTab" }],
       }),
     );
   };

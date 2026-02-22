@@ -1,5 +1,4 @@
-import HomeScreen from "../screens/HomeScreen";
-import AddPhotoScreen from "../screens/AddPhotoScreen";
+import AddPhotoScreen from "../screens/photo/AddPhotoScreen";
 import ProfileNavigator from "../navigation/ProfileNavigator";
 import { RedirectTargets } from "../constants/navigation";
 import HomeNavigator from "../navigation/HomeNavigator";

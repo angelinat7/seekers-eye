@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import EditProfileScreen from "../screens/profile/EditProfileScreen";
-import ProfileScreen from "../screens/ProfileScreen";
+import ProfileScreen from "../screens/profile/ProfileScreen";
 import EditPhotoScreen from "../screens/photo/EditPhotoScreen";
 import EditProfilePhotoModal from "../components/modals/EditProfilePhotoModal";
 
