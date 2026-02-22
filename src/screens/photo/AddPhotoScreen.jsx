@@ -31,7 +31,7 @@ export default function AddPhotoScreen() {
     console.log(payload);
     navigation.reset({
       index: 0,
-      routes: [{ name: "Home" }],
+      routes: [{ name: "HomeTab" }],
     });
   };
 
@@ -68,7 +68,12 @@ export default function AddPhotoScreen() {
             />
           </View>
 
-          <ImagePickerField value={image} onChange={setImage} aspect={[4, 3]} />
+          <ImagePickerField
+            value={image}
+            onChange={setImage}
+            loading={loading}
+            setLoading={setLoading}
+          />
 
           <ButtonPrimary
             title="Submit your photo"
