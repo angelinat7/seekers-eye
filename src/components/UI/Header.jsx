@@ -1,11 +1,15 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../../context/theme/ThemeContext";
+
 import { HEADER_VARIANTS } from "../../constants/header-variants";
+import { Ionicons } from "@expo/vector-icons";
+import { useNavigation } from "@react-navigation/native";
 
 export default function Header({ variant = "HOME" }) {
   const { theme } = useTheme();
   const config = HEADER_VARIANTS[variant] || HEADER_VARIANTS.HOME;
+  const navigation = useNavigation();
 
   return (
     <LinearGradient
@@ -14,10 +18,24 @@ export default function Header({ variant = "HOME" }) {
       end={{ x: 1, y: 0 }}
       style={styles.container}
     >
-      <Text style={[styles.title, { color: theme.header.title }]}>
-        Seeker's Eye
-      </Text>
-
+      <View style={styles.titleContainer}>
+        <Text style={[styles.title, { color: theme.header.title }]}>
+          Seeker's Eye
+        </Text>
+        {config.showSettings && (
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("Settings");
+            }}
+          >
+            <Ionicons
+              color={theme.header.title}
+              name="settings-outline"
+              size={20}
+            />
+          </TouchableOpacity>
+        )}
+      </View>
       {config.showSubtitle && (
         <Text
           style={[
@@ -63,7 +81,11 @@ const getSubtitleStyle = (variant) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    // borderRadius: 8,
+  },
+  titleContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "baseline",
   },
   title: {
     marginTop: 30,

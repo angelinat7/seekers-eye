@@ -1,68 +1,18 @@
-import * as ImagePicker from "expo-image-picker";
-import {
-  Alert,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "../../context/theme/ThemeContext";
 import ButtonOutlined from "./buttons/ButtonOutlined";
-import { Ionicons } from "@expo/vector-icons";
+
+import { pickFromCamera, pickFromGallery } from "../../utils/utils";
 
 export default function ImagePickerField({
   value,
   onChange,
-  aspect = [1, 1],
-  allowsEditing = true,
   containerStyle,
+  loading,
+  setLoading,
 }) {
   const { theme } = useTheme();
-
-  const pickImage = async (fromCamera) => {
-    try {
-      if (fromCamera) {
-        const { status } = await ImagePicker.requestCameraPermissionsAsync();
-        if (status !== "granted") {
-          Alert.alert("Camera permission required");
-          return;
-        }
-
-        const result = await ImagePicker.launchCameraAsync({
-          mediaTypes: ["images"],
-          allowsEditing,
-          aspect,
-          quality: 0.8,
-        });
-
-        if (!result.canceled) {
-          onChange(result.assets[0]);
-        }
-      } else {
-        const { status } =
-          await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-        if (status !== "granted") {
-          Alert.alert("Gallery permission required");
-          return;
-        }
-
-        const result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ["images"],
-          allowsEditing,
-          aspect,
-          quality: 0.8,
-        });
-
-        if (!result.canceled) {
-          onChange(result.assets[0]);
-        }
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
 
   return (
     <View style={styles.container}>
@@ -70,7 +20,10 @@ export default function ImagePickerField({
 
       <TouchableOpacity
         style={[styles.imageBox, containerStyle, { borderColor: theme.border }]}
-        onPress={() => pickImage(false)}
+        onPress={() =>
+          pickFromGallery(onChange, { aspect: [4, 3] }, setLoading)
+        }
+        disabled={loading}
       >
         {value ? (
           <Image source={{ uri: value.uri }} style={styles.image} />
@@ -80,10 +33,10 @@ export default function ImagePickerField({
               <Ionicons name="images-outline" color={theme.label} size={28} />
             </View>
             <Text style={[styles.placeholder, { color: theme.label }]}>
-              Click to add photo{" "}
+              Click to add photo
             </Text>
             <Text style={[styles.placeholder, { color: theme.label }]}>
-              JPG, PNG up to 10MB{" "}
+              JPG, PNG up to 10M
             </Text>
           </>
         )}
@@ -95,14 +48,20 @@ export default function ImagePickerField({
           iconName="camera-outline"
           title="Take photo"
           style={{ width: "48%" }}
-          onPress={() => pickImage(true)}
+          onPress={() =>
+            pickFromCamera(onChange, { aspect: [4, 3] }, setLoading)
+          }
+          disabled={loading}
         />
         <ButtonOutlined
           color={theme.accent}
           iconName="images-outline"
           title="From Gallery"
           style={{ width: "48%" }}
-          onPress={() => pickImage(false)}
+          onPress={() =>
+            pickFromGallery(onChange, { aspect: [4, 3] }, setLoading)
+          }
+          disabled={loading}
         />
       </View>
     </View>

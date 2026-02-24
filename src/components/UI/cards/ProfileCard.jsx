@@ -2,13 +2,15 @@ import { Ionicons } from "@expo/vector-icons";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAuth } from "../../../context/auth/AuthContext";
 import Avatar from "../Avatar";
-import ButtonOutlined from "../buttons/ButtonOutlined";
 
 export default function ProfileCard({ user, theme, onEditProfileHandler }) {
   const { updatedUsers } = useAuth();
 
   return (
-    <View style={[styles.card, { backgroundColor: theme.surface }]}>
+    <TouchableOpacity
+      onPress={onEditProfileHandler}
+      style={[styles.card, { backgroundColor: theme.surface }]}
+    >
       <View style={styles.userInfoContainer}>
         <View style={styles.userDetails}>
           <Avatar />
@@ -29,7 +31,7 @@ export default function ProfileCard({ user, theme, onEditProfileHandler }) {
           <Ionicons name="settings-outline" size={20} color={theme.accent} />
         </TouchableOpacity>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 }
 

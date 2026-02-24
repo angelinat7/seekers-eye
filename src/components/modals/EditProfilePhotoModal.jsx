@@ -1,10 +1,10 @@
 import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from "expo-image-picker";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAuth } from "../../context/auth/AuthContext";
 import { useTheme } from "../../context/theme/ThemeContext";
+import { pickFromCamera, pickFromGallery } from "../../utils/utils";
 import Avatar from "../UI/Avatar";
 import Header from "../UI/Header";
 import ButtonLink from "../UI/buttons/ButtonLink";
@@ -14,62 +14,7 @@ export default function EditProfilePhotoModal({ navigation, route }) {
   const { theme } = useTheme();
   const { user } = useAuth();
   const [image, setImage] = useState(user.avatar ?? null);
-
-  const pickImage = async () => {
-    try {
-      const permissionResult =
-        await ImagePicker.requestCameraPermissionsAsync();
-
-      if (!permissionResult.granted) {
-        Alert.alert(
-          "Permission required",
-          "Permission to access camera is required.",
-        );
-        return;
-      }
-
-      let result = await ImagePicker.launchCameraAsync({
-        mediaTypes: "images",
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.6,
-      });
-
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  const chooseImageFromGallery = async () => {
-    try {
-      const permissionResult =
-        await ImagePicker.requestMediaLibraryPermissionsAsync();
-
-      if (!permissionResult.granted) {
-        Alert.alert(
-          "Permission required",
-          "Permission to access media library is required.",
-        );
-        return;
-      }
-
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: "images",
-        allowsEditing: true,
-        aspect: [1, 1],
-        quality: 0.6,
-      });
-
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
-      }
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleSave = () => {
     if (!image) return;
@@ -122,7 +67,8 @@ export default function EditProfilePhotoModal({ navigation, route }) {
               borderColor: theme.border,
             },
           ]}
-          onPress={pickImage}
+          onPress={() => pickFromCamera((img) => setImage(img.uri), setLoading)}
+          disabled={loading}
         >
           <LinearGradient
             style={styles.linearGradient}
@@ -151,7 +97,10 @@ export default function EditProfilePhotoModal({ navigation, route }) {
               borderColor: theme.border,
             },
           ]}
-          onPress={chooseImageFromGallery}
+          onPress={() =>
+            pickFromGallery((img) => setImage(img.uri), setLoading)
+          }
+          disabled={loading}
         >
           <LinearGradient
             style={styles.linearGradient}

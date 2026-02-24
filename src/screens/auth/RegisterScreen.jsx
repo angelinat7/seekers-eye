@@ -14,6 +14,7 @@ export default function RegisterScreen({ navigation, route }) {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [repeatPassword, setRepeatPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const redirectTo = route.params?.redirectTo ?? RedirectTargets.HOME;
@@ -84,6 +85,19 @@ export default function RegisterScreen({ navigation, route }) {
           placeholder="••••••••"
           value={password}
           onChangeText={setPassword}
+          theme={theme}
+          editable={!loading}
+          secureTextEntry
+          autoCapitalize="none"
+          autoComplete="off"
+          textContentType="password"
+        />
+
+        <FormInput
+          label="Repeat password"
+          placeholder="••••••••"
+          value={repeatPassword}
+          onChangeText={setRepeatPassword}
           theme={theme}
           editable={!loading}
           secureTextEntry
