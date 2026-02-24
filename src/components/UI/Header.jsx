@@ -36,19 +36,17 @@ export default function Header({ variant = "HOME" }) {
           </TouchableOpacity>
         )}
       </View>
-      <View style={styles.switchContainer}>
-        {config.showSubtitle && (
-          <Text
-            style={[
-              styles.subtitle,
-              getSubtitleStyle(variant),
-              { color: theme.header.subtitle },
-            ]}
-          >
-            PHOTO CONTEST
-          </Text>
-        )}
-      </View>
+      {config.showSubtitle && (
+        <Text
+          style={[
+            styles.subtitle,
+            getSubtitleStyle(variant),
+            { color: theme.header.subtitle },
+          ]}
+        >
+          PHOTO CONTEST
+        </Text>
+      )}
 
       {config.showTagline && (
         <Text style={[styles.tagline, { color: theme.header.title }]}>
@@ -83,9 +81,6 @@ const getSubtitleStyle = (variant) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-  },
-  switchContainer: {
-    flexDirection: "row",
   },
   titleContainer: {
     flexDirection: "row",
