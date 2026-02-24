@@ -20,7 +20,7 @@ export default function SettingsScreen({ navigation }) {
       </View>
       <View style={styles.innerContainer}>
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.accent }]}>
+          <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
             Appearance
           </Text>
           <View style={[styles.card, { borderColor: theme.border }]}>
@@ -33,10 +33,12 @@ export default function SettingsScreen({ navigation }) {
           </View>
         </View>
         <View style={styles.section}>
-          <Text style={[styles.sectionTitle, { color: theme.accent }]}>
+          <Text style={[styles.sectionTitle, { color: theme.textPrimary }]}>
             App version
           </Text>
-          <Text style={[styles.text, { color: theme.textPrimary }]}>1.0.0</Text>
+          <Text style={[styles.text, { color: theme.textSecondary }]}>
+            1.0.0
+          </Text>
         </View>
       </View>
     </View>
@@ -52,8 +54,6 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   card: {
-    // paddingVertical: 16,
-    // paddingHorizontal: 8,
     padding: 16,
     borderRadius: 8,
     borderWidth: 1.5,
