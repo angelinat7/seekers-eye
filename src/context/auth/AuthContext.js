@@ -1,4 +1,3 @@
-import { isLoading } from "expo-font";
 import { createContext, useContext } from "react";
 
 export const AuthContext = createContext({
@@ -6,10 +5,9 @@ export const AuthContext = createContext({
   isAuthenticated: false,
   isLoading: true,
   error: null,
-  register() {},
-  login() {},
-  logout() {},
-  clearError() {},
+  async register() {},
+  async login() {},
+  async logout() {},
   updateUser() {},
 });
 

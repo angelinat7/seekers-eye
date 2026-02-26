@@ -17,7 +17,6 @@
     },
     "android": {
       "package": "com.ang.seekerseye",
-      "googleServicesFile": "./android/app/google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/seeker's-eye.png",
         "backgroundColor": "#ffffff"
@@ -42,4 +41,3 @@
     ]
   }
 }
-

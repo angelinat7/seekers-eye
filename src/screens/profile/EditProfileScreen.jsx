@@ -29,6 +29,7 @@ export default function EditProfileScreen() {
     navigation.navigate("EditPhotoModal", {
       onSave: (newImage) => {
         setAvatar(newImage);
+        // TODO Move the logic to a hook
       },
     });
   };

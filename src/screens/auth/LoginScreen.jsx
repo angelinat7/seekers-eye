@@ -1,40 +1,58 @@
-import { Alert, StyleSheet, Text, TextInput, View } from "react-native";
-import { useTheme } from "../../context/theme/ThemeContext";
-import { useAuth } from "../../context/auth/AuthContext";
-import AuthLayout from "../../components/UI/AuthLayout";
-import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
-import ButtonLink from "../../components/UI/buttons/ButtonLink";
-import { REDIRECT_ROUTES, RedirectTargets } from "../../constants/navigation";
 import { useState } from "react";
+import { StyleSheet, Text, View, Alert } from "react-native";
+import AuthLayout from "../../components/UI/AuthLayout";
+import ButtonLink from "../../components/UI/buttons/ButtonLink";
+import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
 import FormInput from "../../components/UI/FormInput";
+import { REDIRECT_ROUTES, RedirectTargets } from "../../constants/navigation";
+import { useAuth } from "../../context/auth/AuthContext";
+import { useTheme } from "../../context/theme/ThemeContext";
+import { LOGIN_FIELDS } from "../../constants/input-fields";
+import { useForm } from "../../hooks/useForm";
+import { validateInputField } from "../../utils/validate-input-field";
 
 export default function LoginScreen({ navigation, route }) {
   const { theme } = useTheme();
-  const { login } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { login, error } = useAuth();
+
   const [loading, setLoading] = useState(false);
+
+  const initialValues = {
+    email: "",
+    password: "",
+  };
+
+  const { values, errors, handleInputChange, validateForm } = useForm({
+    initialValues,
+    fields: LOGIN_FIELDS,
+    validateField: validateInputField,
+  });
 
   const redirectTo = route.params?.redirectTo ?? RedirectTargets.HOME;
 
-  const handleLoginSuccess = async () => {
-    if (!email || !password) {
-      Alert.alert("Error", "Please fill in all fields");
+  const handleLogin = async () => {
+    const formErrors = validateForm(LOGIN_FIELDS);
+
+    if (Object.keys(formErrors).length > 0) {
+      Alert.alert(
+        "Form Error",
+        "Please review the highlighted fields and try again",
+      );
       return;
     }
 
-    setLoading(true);
-    const res = await login(email, password);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const user = await login(values.email, values.password);
 
-    if (!res.success) {
-      Alert.alert("Login Failed", res.message);
-      return;
+      const targetRoute =
+        REDIRECT_ROUTES[redirectTo] || REDIRECT_ROUTES[RedirectTargets.HOME];
+      navigation.replace("TabNavigator", targetRoute);
+    } catch (error) {
+      Alert.alert("Login failed", error?.message ?? "Something went wrong");
+    } finally {
+      setLoading(false);
     }
-
-    const targetRoute =
-      REDIRECT_ROUTES[redirectTo] || REDIRECT_ROUTES[RedirectTargets.HOME];
-    navigation.replace("TabNavigator", targetRoute);
   };
 
   const handleNavigateToRegister = () => {
@@ -51,30 +69,32 @@ export default function LoginScreen({ navigation, route }) {
         <FormInput
           label="Email"
           placeholder="Enter your email"
-          value={email}
-          onChangeText={setEmail}
+          value={values.email}
+          onChangeText={(text) => handleInputChange("email", text)}
           theme={theme}
           editable={!loading}
           autoCapitalize="none"
+          errorMessage={errors.email}
         />
 
         <FormInput
           label="Password"
           placeholder="Your password"
-          value={password}
-          onChangeText={setPassword}
+          value={values.password}
+          onChangeText={(text) => handleInputChange("password", text)}
           theme={theme}
           editable={!loading}
           secureTextEntry
           autoCapitalize="none"
           autoComplete="off"
           textContentType="password"
+          errorMessage={errors.password}
         />
         <View style={styles.buttonPrimaryContainer}>
           <ButtonPrimary
             title="Login"
             iconName="log-in-outline"
-            onPress={handleLoginSuccess}
+            onPress={handleLogin}
             disabled={loading}
           />
         </View>

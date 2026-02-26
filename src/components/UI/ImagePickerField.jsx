@@ -3,7 +3,7 @@ import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "../../context/theme/ThemeContext";
 import ButtonOutlined from "./buttons/ButtonOutlined";
 
-import { pickFromCamera, pickFromGallery } from "../../utils/utils";
+import { pickFromCamera, pickFromGallery } from "../../utils/pick-image";
 
 export default function ImagePickerField({
   value,
