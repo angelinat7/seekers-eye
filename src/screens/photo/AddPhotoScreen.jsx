@@ -40,7 +40,7 @@ export default function AddPhotoScreen() {
       <Header variant="ADD_PHOTO" />
 
       <KeyboardAvoidingView
-        style={[styles.inputContainer, { backgroundColor: theme.background }]}
+        style={[styles.contentContainer, { backgroundColor: theme.background }]}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
         keyboardVerticalOffset={Platform.OS === "ios" ? 0 : 20}
       >
@@ -74,12 +74,13 @@ export default function AddPhotoScreen() {
             loading={loading}
             setLoading={setLoading}
           />
-
-          <ButtonPrimary
-            title="Submit your photo"
-            iconName="cloud-upload-outline"
-            onPress={handleSubmit}
-          />
+          <View style={styles.submitButtonContainer}>
+            <ButtonPrimary
+              title="Submit your photo"
+              iconName="cloud-upload-outline"
+              onPress={handleSubmit}
+            />
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </View>
@@ -87,6 +88,9 @@ export default function AddPhotoScreen() {
 }
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  contentContainer: {
     flex: 1,
   },
   imgDataContainer: {
@@ -99,13 +103,14 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   inputContainer: {
-    flex: 1,
-    paddingTop: 8,
+    paddingTop: 20,
   },
   scrollContent: {
     flexGrow: 1,
-    gap: 16,
     paddingHorizontal: 16,
     paddingBottom: 20,
+  },
+  submitButtonContainer: {
+    marginTop: 16,
   },
 });

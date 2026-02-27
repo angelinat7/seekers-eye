@@ -19,11 +19,11 @@ import { useTheme } from "../../context/theme/ThemeContext";
 
 export default function EditProfileScreen() {
   const { theme } = useTheme();
-  const { user, updateUser } = useAuth();
+  const { profile, updateProfile } = useAuth();
   const navigation = useNavigation();
 
-  const [avatar, setAvatar] = useState(user.avatar ?? null);
-  const [username, setUsername] = useState(user.username);
+  const [avatar, setAvatar] = useState(profile.avatar ?? null);
+  const [username, setUsername] = useState(profile.username);
 
   const openPhotoModal = () => {
     navigation.navigate("EditPhotoModal", {
@@ -99,7 +99,7 @@ export default function EditProfileScreen() {
             label="Email"
             message="Email cannot be changed"
             theme={theme}
-            placeholder={user.email}
+            placeholder={profile.email}
             editable={false}
           />
 
@@ -121,6 +121,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  scrollContent: {
+    paddingBottom: 40,
+  },
   content: {
     paddingHorizontal: 16,
   },
@@ -131,7 +134,7 @@ const styles = StyleSheet.create({
     position: "relative",
   },
   buttonContainer: {
-    marginTop: 28,
+    marginTop: 48,
   },
   camButton: {
     width: 30,

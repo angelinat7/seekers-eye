@@ -99,10 +99,6 @@ const styles = StyleSheet.create({
   buttons: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: 4,
-  },
-  link: {
-    color: "#007aff",
-    fontWeight: "600",
+    marginVertical: 8,
   },
 });

@@ -2,13 +2,14 @@ import { createContext, useContext } from "react";
 
 export const AuthContext = createContext({
   user: null,
+  profile: {},
   isAuthenticated: false,
-  isLoading: true,
+  initializing: true,
   error: null,
   async register() {},
   async login() {},
   async logout() {},
-  updateUser() {},
+  updateProfile() {},
 });
 
 export function useAuth() {

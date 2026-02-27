@@ -1,39 +1,69 @@
+import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
+import { useEffect, useMemo, useState } from "react";
+import { auth, db } from "../../config/firebase-config";
 import {
-  createUserWithEmailAndPassword,
-  onAuthStateChanged,
-  signInWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
-import { useEffect, useState } from "react";
-import { auth } from "../../config/firebase-config";
+  loginUser,
+  logoutUser,
+  registerUser,
+} from "../../services/firebase-auth-service";
+import {
+  createUserDocument,
+  updateUserData,
+} from "../../services/firestore-user-service";
 import { AuthContext } from "./AuthContext";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState({});
   const [initializing, setInitializing] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Listen for auth state changes (autho-restored by Firebase)
+  // Listen for auth state changes (auto-restored by Firebase)
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
-      setInitializing(false);
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (firebaseUser) {
+        setUser(firebaseUser.uid);
+      }
+
+      try {
+        const userRef = doc(db, "users", firebaseUser.uid);
+        const userSnap = await getDoc(userRef);
+
+        if (userSnap.exists()) {
+          setProfile(userSnap.data());
+          setIsAuthenticated(true);
+        } else {
+          setProfile({});
+          setUser(null);
+          setIsAuthenticated(false);
+        }
+      } catch (err) {
+        console.warn(err.message);
+      } finally {
+        setInitializing(false);
+      }
     });
 
-    return () => unsubscribe();
+    return unsubscribe;
   }, []);
 
   // Register
-
-  const register = async (email, password) => {
+  const register = async (email, password, username) => {
     try {
-      const userCredentials = await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      console.log("userCredentials", userCredentials);
-      return userCredentials.user;
+      const { user } = await registerUser(email, password);
+
+      const userData = {
+        uid: currentUser.uid,
+        email: currentUser.email,
+        username: username,
+        photoUrl: null,
+        likes: [],
+      };
+
+      await createUserDocument(userData);
+      return user;
     } catch (error) {
       console.warn(error.message);
       throw mapFirebaseError(error);
@@ -43,26 +73,7 @@ export function AuthProvider({ children }) {
   // Login
   const login = async (email, password) => {
     try {
-      const userCredential = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password,
-      );
-      const uid = userCredential.uid;
-      // const docSnap = await gerDoc(doc, (db, "users", uid));
-      // const profile = docSnap.exists() ? docSnap.data() : {};
-      const userData = {
-        uid,
-        email: userCredential.email,
-        username: userCredential.username,
-        photoURL: userCredential.photoURL,
-      };
-
-      setUser(userData);
-      console.log(userData);
-      console.log("userCredential: ", userCredential);
-
-      return userCredential.user;
+      return await loginUser(email, password);
     } catch (error) {
       throw mapFirebaseError(error);
     }
@@ -71,20 +82,43 @@ export function AuthProvider({ children }) {
   // Logout
   const logout = async () => {
     try {
-      await signOut(auth);
+      await logoutUser();
+      setUser(null);
     } catch (error) {
       console.warn("Logout failed", error);
     }
   };
 
-  const authData = {
-    user,
-    isAuthenticated: !!user,
-    initializing,
-    login,
-    register,
-    logout,
+  const updateProfile = async (updates) => {
+    try {
+      await updateUserData(updates);
+    } catch (err) {
+      console.warn(err);
+    }
   };
+
+  const authData = useMemo(
+    () => ({
+      user,
+      profile,
+      isAuthenticated,
+      initializing,
+      login,
+      register,
+      logout,
+      updateProfile,
+    }),
+    [
+      user,
+      profile,
+      isAuthenticated,
+      initializing,
+      login,
+      register,
+      logout,
+      updateProfile,
+    ],
+  );
 
   return (
     <AuthContext.Provider value={authData}>{children}</AuthContext.Provider>

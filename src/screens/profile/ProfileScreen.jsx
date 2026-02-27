@@ -95,9 +95,7 @@ const userPhotos = [
 // const userPhotos = [];
 export default function ProfileScreen({ navigation }) {
   const { theme, mode, changeMode, ready } = useTheme();
-  const { user, logout } = useAuth();
-
-  // if (!ready || !theme) return null;
+  const { profile, logout } = useAuth();
 
   const onEditProfileHandler = () => {
     navigation.navigate("EditProfile");
@@ -119,7 +117,7 @@ export default function ProfileScreen({ navigation }) {
       <Header variant="PROFILE" />
       <View style={styles.innerContainer}>
         <ProfileCard
-          user={user}
+          profile={profile}
           onEditProfileHandler={onEditProfileHandler}
           theme={theme}
         />

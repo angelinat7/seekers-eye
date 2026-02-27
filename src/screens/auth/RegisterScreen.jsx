@@ -45,7 +45,11 @@ export default function RegisterScreen({ navigation, route }) {
     try {
       setLoading(true);
 
-      const user = await register(values.email, values.password);
+      const user = await register(
+        values.email,
+        values.password,
+        values.username,
+      );
 
       const targetRoute =
         REDIRECT_ROUTES[redirectTo] || REDIRECT_ROUTES[RedirectTargets.HOME];
