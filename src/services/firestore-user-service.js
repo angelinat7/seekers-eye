@@ -29,8 +29,8 @@ export const getUserDocument = async (uid) => {
 };
 
 // update userData
-export const updateUserData = async (updates) => {
-  if (!user) return;
-  const userRef = doc(db, "users", user.uid);
+export const updateUserData = async (uid, updates) => {
+  if (!uid) return;
+  const userRef = doc(db, "users", uid);
   const snapshot = await updateDoc(userRef, updates);
 };

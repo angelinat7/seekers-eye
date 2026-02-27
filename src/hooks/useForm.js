@@ -5,7 +5,7 @@ export const useForm = ({ initialValues, fields, validateField }) => {
   const [errors, setErrors] = useState({});
 
   const handleInputChange = (field, value) => {
-    setValues((prev) => ({ ...prev, [field]: value.trim() }));
+    setValues((prev) => ({ ...prev, [field]: value }));
     setErrors((prev) => ({ ...prev, [field]: null }));
   };
 

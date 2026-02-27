@@ -5,3 +5,5 @@ export const REGISTER_FIELDS = [
   "confirmPassword",
 ];
 export const LOGIN_FIELDS = ["email", "password"];
+
+export const EDIT_PROFILE_FIELDS = ["username"];

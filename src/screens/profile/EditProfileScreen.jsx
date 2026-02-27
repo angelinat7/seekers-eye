@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import {
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -16,6 +17,9 @@ import ButtonLink from "../../components/UI/buttons/ButtonLink";
 import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
 import { useAuth } from "../../context/auth/AuthContext";
 import { useTheme } from "../../context/theme/ThemeContext";
+import { EDIT_PROFILE_FIELDS } from "../../constants/input-fields";
+import { useForm } from "../../hooks/useForm";
+import { validateInputField } from "../../utils/validate-input-field";
 
 export default function EditProfileScreen() {
   const { theme } = useTheme();
@@ -23,7 +27,17 @@ export default function EditProfileScreen() {
   const navigation = useNavigation();
 
   const [avatar, setAvatar] = useState(profile.avatar ?? null);
-  const [username, setUsername] = useState(profile.username);
+  const [loading, setLoading] = useState(profile.username);
+
+  const initialValues = {
+    username: "",
+  };
+
+  const { values, errors, handleInputChange, validateForm } = useForm({
+    initialValues,
+    fields: EDIT_PROFILE_FIELDS,
+    validateField: validateInputField,
+  });
 
   const openPhotoModal = () => {
     navigation.navigate("EditPhotoModal", {
@@ -34,7 +48,23 @@ export default function EditProfileScreen() {
     });
   };
   const handleSave = () => {
-    updateUser({ username, avatar });
+    // TODO add logic for picture upload
+
+    const formErrors = validateForm(EDIT_PROFILE_FIELDS);
+
+    if (Object.keys(formErrors).length > 0) {
+      Alert.alert("Form Error", "please review the form and try again");
+      return;
+    }
+
+    try {
+      setLoading(true);
+      updateProfile(profile.uid, {
+        username: values.username,
+      });
+    } catch (error) {
+      Alert.alert("Form error", "Failed to update user profile");
+    }
     navigation.goBack();
   };
 
@@ -92,8 +122,10 @@ export default function EditProfileScreen() {
           <FormInput
             label="Name"
             theme={theme}
-            value={username}
-            onChangeText={setUsername}
+            placeholder={profile.username}
+            value={values.username}
+            onChangeText={(text) => handleInputChange("username", text)}
+            errorMessage={errors.username}
           />
           <FormInput
             label="Email"

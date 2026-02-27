@@ -89,9 +89,13 @@ export function AuthProvider({ children }) {
     }
   };
 
-  const updateProfile = async (updates) => {
+  const updateProfile = async (uid, updates) => {
     try {
-      await updateUserData(updates);
+      await updateUserData(uid, updates);
+      setProfile((prev) => ({
+        ...prev,
+        ...updates,
+      }));
     } catch (err) {
       console.warn(err);
     }
