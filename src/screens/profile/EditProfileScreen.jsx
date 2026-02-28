@@ -1,7 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
-import { useState } from "react";
+import { useNavigation, useRoute } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -20,52 +21,97 @@ import { useTheme } from "../../context/theme/ThemeContext";
 import { EDIT_PROFILE_FIELDS } from "../../constants/input-fields";
 import { useForm } from "../../hooks/useForm";
 import { validateInputField } from "../../utils/validate-input-field";
+import { uploadImageToStorage } from "../../services/firestore-photos-service";
 
 export default function EditProfileScreen() {
   const { theme } = useTheme();
   const { profile, updateProfile } = useAuth();
   const navigation = useNavigation();
 
-  const [avatar, setAvatar] = useState(profile.avatar ?? null);
-  const [loading, setLoading] = useState(profile.username);
+  const [avatar, setAvatar] = useState(profile.photoUrl ?? null);
+  const [loading, setLoading] = useState(false);
 
-  const initialValues = {
-    username: "",
-  };
+  console.log(profile);
 
-  const { values, errors, handleInputChange, validateForm } = useForm({
-    initialValues,
-    fields: EDIT_PROFILE_FIELDS,
-    validateField: validateInputField,
-  });
+  const initialValues = { username: "" };
+
+  const { values, setValues, errors, handleInputChange, validateForm } =
+    useForm({
+      initialValues,
+      fields: EDIT_PROFILE_FIELDS,
+      validateField: validateInputField,
+    });
+
+  useEffect(() => {
+    if (profile?.username) {
+      setValues((prev) => ({
+        ...prev,
+        username: profile.username,
+      }));
+    }
+  }, [profile]);
 
   const openPhotoModal = () => {
-    navigation.navigate("EditPhotoModal", {
-      onSave: (newImage) => {
-        setAvatar(newImage);
-        // TODO Move the logic to a hook
-      },
-    });
+    navigation.navigate("EditPhotoModal", { setAvatar });
   };
-  const handleSave = () => {
-    // TODO add logic for picture upload
 
+  const handleSave = async () => {
     const formErrors = validateForm(EDIT_PROFILE_FIELDS);
-
     if (Object.keys(formErrors).length > 0) {
-      Alert.alert("Form Error", "please review the form and try again");
+      Alert.alert("Form Error", "Please review the form and try again");
       return;
     }
 
-    try {
-      setLoading(true);
-      updateProfile(profile.uid, {
-        username: values.username,
-      });
-    } catch (error) {
-      Alert.alert("Form error", "Failed to update user profile");
+    const updates = {};
+
+    // Check avatar change
+    if (avatar && avatar !== profile.photoUrl) {
+      if (avatar.startsWith("file://")) {
+        setLoading(true);
+        try {
+          const avatarPath = `avatars/${profile.uid}/avatar.jpg`;
+          const { downloadURL } = await uploadImageToStorage(
+            avatar,
+            avatarPath,
+          );
+          updates.photoUrl = downloadURL;
+        } catch (error) {
+          console.warn("Avatar upload failed", error);
+          Alert.alert(
+            "Upload failed",
+            "Could not upload avatar. Please try again.",
+          );
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        updates.photoUrl = avatar;
+      }
     }
-    navigation.goBack();
+
+    // Check username changed
+    if (values.username && values.username.trim() !== profile.username) {
+      updates.username = values.username.trim();
+    }
+
+    if (Object.keys(updates).length === 0) {
+      Alert.alert("No changes made");
+      return;
+    }
+
+    // Firestore update
+    setLoading(true);
+    try {
+      await updateProfile(profile.uid, updates);
+      navigation.goBack();
+    } catch (error) {
+      Alert.alert(
+        "Update failed",
+        "Something went wrong while updating your profile. Please try again.",
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -91,6 +137,7 @@ export default function EditProfileScreen() {
         </View>
 
         <View style={styles.content}>
+          {/* Avatar preview */}
           <View style={styles.avatarContainer}>
             <Avatar size="lg" avatar={avatar} />
 
@@ -122,7 +169,6 @@ export default function EditProfileScreen() {
           <FormInput
             label="Name"
             theme={theme}
-            placeholder={profile.username}
             value={values.username}
             onChangeText={(text) => handleInputChange("username", text)}
             errorMessage={errors.username}
@@ -137,11 +183,13 @@ export default function EditProfileScreen() {
 
           <View style={styles.buttonContainer}>
             <ButtonPrimary
-              title="Save Changes"
+              title={loading ? "Saving changes..." : "Save Changes"}
               iconName="save-outline"
               size={18}
               onPress={handleSave}
+              disabled={loading}
             />
+            {loading && <ActivityIndicator size="large" color={theme.info} />}
           </View>
         </View>
       </ScrollView>

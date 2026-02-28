@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import {
   Image,
+  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -8,23 +9,66 @@ import {
   View,
 } from "react-native";
 import Header from "../../components/UI/Header";
-
-import { useState } from "react";
+import { useForm } from "../../hooks/useForm";
+import { validateInputField } from "../../utils/validate-input-field";
+import { useEffect, useState } from "react";
 import ButtonLink from "../../components/UI/buttons/ButtonLink";
 import ButtonOutlined from "../../components/UI/buttons/ButtonOutlined";
 import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
 import FormInput from "../../components/UI/FormInput";
 import { useTheme } from "../../context/theme/ThemeContext";
+import { EDIT_PHOTO_FIELDS } from "../../constants/input-fields";
 
 export default function EditPhotoScreen({ route }) {
   const { theme } = useTheme();
   const { photo } = route.params;
-  const [title, setTitle] = useState(photo.title ?? "");
-  const [description, setDescription] = useState(photo.description ?? "");
+  const [loading, setLoading] = useState(false);
+  // const [description, setDescription] = useState(photo.description ?? "");
   const navigation = useNavigation();
+
+  const initialValues = {
+    title: "",
+    description: "",
+  };
+
+  const { values, setValues, errors, handleInputChange, validateForm } =
+    useForm({
+      initialValues,
+      fields: EDIT_PHOTO_FIELDS,
+      validateField: validateInputField,
+    });
+
+  useEffect(() => {
+    if (!photo) return;
+
+    setValues((prev) => ({
+      ...prev,
+      title: photo?.title ?? "",
+      description: photo.description ?? "",
+    }));
+  }, [photo]);
 
   const onPressHandler = () => {
     navigation.goBack();
+  };
+
+  const onSaveHandler = () => {
+    // TODO add logic for picture upload
+
+    const formErrors = validateForm(EDIT_PHOTO_FIELDS);
+
+    if (Object.keys(formErrors).length > 0) {
+      Alert.alert("Form Error", "please review the form and try again");
+      return;
+    }
+    try {
+      setLoading(true);
+      updateProfile(profile.uid, {
+        username: values.username,
+      });
+    } catch (error) {
+      Alert.alert("Form error", "Failed to update photo]");
+    }
   };
 
   return (
@@ -56,16 +100,16 @@ export default function EditPhotoScreen({ route }) {
           <View>
             <FormInput
               label="Title"
-              placeholder=""
-              value={title}
-              onChangeText={setTitle}
+              value={values.title}
+              onChangeText={(text) => handleInputChange("title", text)}
+              errorMessage={errors.title}
               theme={theme}
             />
             <FormInput
               label="Description"
-              placeholder=""
-              value={description}
-              onChangeText={setDescription}
+              value={values.description}
+              onChangeText={(text) => handleInputChange("description", text)}
+              errorMessage={errors.description}
               multiline
               numberOfLines={2}
               theme={theme}
@@ -77,6 +121,7 @@ export default function EditPhotoScreen({ route }) {
               title="Save Changes"
               iconName="save-outline"
               style={{ width: "80%" }}
+              onPress={onSaveHandler}
             />
             <ButtonOutlined
               iconName="trash-outline"

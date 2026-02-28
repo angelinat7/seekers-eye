@@ -1,13 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ScrollView,
-} from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAuth } from "../../context/auth/AuthContext";
 import { useTheme } from "../../context/theme/ThemeContext";
 import { pickFromCamera, pickFromGallery } from "../../utils/pick-image";
@@ -18,14 +12,16 @@ import ButtonPrimary from "../UI/buttons/ButtonPrimary";
 
 export default function EditProfilePhotoModal({ navigation, route }) {
   const { theme } = useTheme();
-  const { profile, updateProfile } = useAuth();
+  const { profile } = useAuth();
+
+  const { setAvatar } = route.params;
+
   const [image, setImage] = useState(profile.photoUrl ?? null);
   const [loading, setLoading] = useState(false);
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (!image) return;
-
-    route.params?.onSave?.(image);
+    setAvatar(image); // pass local uri back to parent
     navigation.goBack();
   };
 

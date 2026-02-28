@@ -24,6 +24,7 @@ export const useForm = ({ initialValues, fields, validateField }) => {
   return {
     values,
     errors,
+    setValues,
     handleInputChange,
     validateForm,
   };
