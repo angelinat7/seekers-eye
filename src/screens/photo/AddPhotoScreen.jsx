@@ -1,6 +1,7 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import {
+  ActivityIndicator,
   Alert,
   KeyboardAvoidingView,
   Platform,
@@ -16,10 +17,8 @@ import { ADD_PHOTO_FIELDS } from "../../constants/input-fields";
 import { useAuth } from "../../context/auth/AuthContext";
 import { useTheme } from "../../context/theme/ThemeContext";
 import { useForm } from "../../hooks/useForm";
-import {
-  createPhotoDocument,
-  uploadImageToStorage,
-} from "../../services/firestore-photos-service";
+import { uploadImageToStorage } from "../../services/firebase-storage-service";
+import { uploadContestPhoto } from "../../services/firestore-photos-service";
 import { validateInputField } from "../../utils/validate-input-field";
 
 export default function AddPhotoScreen() {
@@ -56,28 +55,25 @@ export default function AddPhotoScreen() {
 
     try {
       setLoading(true);
-      // Generate a consistent timestamp for file naming
-      const timestamp = Date.now();
-      const fileName = `${timestamp}.jpg`;
-      const storagePath = `photos/${profile.uid}/${fileName}`;
+      // Create Firestore document first to get its ID
 
-      // Upload to Firebase storage
+      const photo = await uploadContestPhoto({
+        uri: selectedImage.uri,
+        authorId: profile.uid,
+        authorName: profile.username,
+        title: values.title,
+        description: values.description,
+      });
+
+      // Use the document ID as the Storage file name
+      const storagePath = `photos/${profile.uid}/${photo.photoId}.jpg`;
+
       const { downloadURL } = await uploadImageToStorage(
         selectedImage.uri,
         storagePath,
       );
 
-      // Create Firestore document
-      const photoDoc = await createPhotoDocument({
-        downloadURL,
-        storagePath,
-        authorId: profile.uid,
-        title: values.title,
-        description: values.description,
-        likes: 0,
-      });
-
-      alert("Photo uploaded successfully");
+      Alert.alert("Photo uploaded successfully");
       setSelectedImage(null);
 
       navigation.reset({
@@ -86,7 +82,10 @@ export default function AddPhotoScreen() {
       });
     } catch (error) {
       console.warn("Upload error: ", error);
-      alert("Something went wrong during upload");
+      Alert.alert(
+        "Uploading Error",
+        "Something went wrong during upload. Please try again",
+      );
     } finally {
       setLoading(false);
     }
@@ -140,6 +139,7 @@ export default function AddPhotoScreen() {
               disabled={loading}
               onPress={handleUploadPhoto}
             />
+            {loading && <ActivityIndicator size="large" color={theme.info} />}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

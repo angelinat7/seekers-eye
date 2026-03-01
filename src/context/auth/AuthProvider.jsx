@@ -12,6 +12,7 @@ import {
   updateUserData,
 } from "../../services/firestore-user-service";
 import { AuthContext } from "./AuthContext";
+import { syncUserPhotos } from "../../services/firestore-photos-service";
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
@@ -91,7 +92,11 @@ export function AuthProvider({ children }) {
 
   const updateProfile = async (uid, updates) => {
     try {
+      // Update user document in Firestore
       await updateUserData(uid, updates);
+      // Sync user profile changes (username, avatar) to all user photos
+      await syncUserPhotos(uid, updates);
+      // Update local auth state
       setProfile((prev) => ({
         ...prev,
         ...updates,

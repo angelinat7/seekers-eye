@@ -21,7 +21,7 @@ import { useTheme } from "../../context/theme/ThemeContext";
 import { EDIT_PROFILE_FIELDS } from "../../constants/input-fields";
 import { useForm } from "../../hooks/useForm";
 import { validateInputField } from "../../utils/validate-input-field";
-import { uploadImageToStorage } from "../../services/firestore-photos-service";
+import { uploadImageToStorage } from "../../services/firebase-storage-service";
 
 export default function EditProfileScreen() {
   const { theme } = useTheme();
@@ -30,8 +30,6 @@ export default function EditProfileScreen() {
 
   const [avatar, setAvatar] = useState(profile.photoUrl ?? null);
   const [loading, setLoading] = useState(false);
-
-  console.log(profile);
 
   const initialValues = { username: "" };
 
@@ -89,7 +87,7 @@ export default function EditProfileScreen() {
       }
     }
 
-    // Check username changed
+    // Username changed
     if (values.username && values.username.trim() !== profile.username) {
       updates.username = values.username.trim();
     }
