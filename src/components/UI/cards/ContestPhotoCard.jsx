@@ -1,7 +1,7 @@
-import { View, Text, Image, StyleSheet, TouchableOpacity } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import Badge from "../Badge";
+import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useTheme } from "../../../context/theme/ThemeContext";
+import Badge from "../Badge";
 
 export default function ContestPhotoCard({ photo, voted = false, onPress }) {
   const { theme } = useTheme();
@@ -13,7 +13,7 @@ export default function ContestPhotoCard({ photo, voted = false, onPress }) {
       onPress={onPress}
     >
       <View style={[styles.imgContainer, { shadowColor: theme.shadowColor }]}>
-        <Image source={{ uri: photo.imageUrl }} style={styles.image} />
+        <Image source={{ uri: photo.downloadURL }} style={styles.image} />
         <View style={styles.badgeContainer}>
           <Badge state="OPEN" />
         </View>
@@ -25,7 +25,7 @@ export default function ContestPhotoCard({ photo, voted = false, onPress }) {
         <View>
           <View style={styles.userLikesRow}>
             <Text style={[styles.user, { color: theme.textPrimary }]}>
-              by {photo.author}
+              by {photo.authorName}
             </Text>
             <View style={styles.likesContainer}>
               {voted ? (

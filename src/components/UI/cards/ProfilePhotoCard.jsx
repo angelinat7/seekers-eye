@@ -1,15 +1,41 @@
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { deletePhotoById } from "../../../services/firestore-photos-service";
+import Toast from "react-native-toast-message";
 
-export default function ProfilePhotoCard({ item, theme }) {
+export default function ProfilePhotoCard({ item, setUserPhotos, theme }) {
   const navigation = useNavigation();
+
   const editPhotoHandler = () => {
     navigation.navigate("EditPhoto", { photo: item });
   };
+
+  const onDeleteHandler = async (id) => {
+    // TODO confirmation
+    try {
+      await deletePhotoById(id);
+      setUserPhotos((photos) => photos.filter((photo) => photo.id !== id));
+      Toast.show({
+        type: "success",
+        text1: "Picture deleted successfully",
+        position: "bottom",
+        bottomOffset: 200,
+      });
+    } catch (error) {
+      console.warn(error);
+      Toast.show({
+        type: "error",
+        text1: "Error deleting picture",
+        text2: "Please try again",
+        position: "bottom",
+        bottomOffset: 200,
+      });
+    }
+  };
   return (
     <View style={[styles.container, { backgroundColor: theme.surface }]}>
-      <Image source={{ uri: item.imageUrl }} style={styles.image} />
+      <Image source={{ uri: item.downloadURL }} style={styles.image} />
 
       <View style={styles.textContent}>
         <View>
@@ -18,7 +44,7 @@ export default function ProfilePhotoCard({ item, theme }) {
           </Text>
 
           <View style={styles.rowCenter}>
-            <Ionicons name="heart" size={12} color={theme.accent} />
+            <Ionicons name="heart" size={14} color={theme.accent} />
             <Text style={[styles.photoLikes, { color: theme.textSecondary }]}>
               {item.likes} votes
             </Text>
@@ -31,7 +57,10 @@ export default function ProfilePhotoCard({ item, theme }) {
             <Text style={[styles.actionText, { color: theme.info }]}>Edit</Text>
           </Pressable>
 
-          <Pressable style={styles.actionButton}>
+          <Pressable
+            style={styles.actionButton}
+            onPress={() => onDeleteHandler(item.id)}
+          >
             <Ionicons name="trash-outline" size={12} color={theme.error} />
             <Text style={[styles.actionText, { color: theme.error }]}>
               Delete
@@ -82,7 +111,7 @@ const styles = StyleSheet.create({
   },
   rowCenter: {
     flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
+    alignItems: "baseline",
+    gap: 4,
   },
 });

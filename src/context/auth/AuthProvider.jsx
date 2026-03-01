@@ -24,15 +24,22 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      if (firebaseUser) {
-        setUser(firebaseUser.uid);
+      if (!firebaseUser) {
+        setUser(null);
+        setProfile({});
+        setIsAuthenticated(false);
+        setInitializing(false);
+        return;
       }
 
       try {
+        setUser(firebaseUser.uid);
+
         const userRef = doc(db, "users", firebaseUser.uid);
         const userSnap = await getDoc(userRef);
 
         if (userSnap.exists()) {
+          setUser(firebaseUser.uid);
           setProfile(userSnap.data());
           setIsAuthenticated(true);
         } else {
@@ -47,7 +54,7 @@ export function AuthProvider({ children }) {
       }
     });
 
-    return unsubscribe;
+    return () => unsubscribe();
   }, []);
 
   // Register
@@ -56,8 +63,8 @@ export function AuthProvider({ children }) {
       const { user } = await registerUser(email, password);
 
       const userData = {
-        uid: currentUser.uid,
-        email: currentUser.email,
+        uid: user.uid,
+        email: user.email,
         username: username,
         photoUrl: null,
         likes: [],
@@ -84,7 +91,6 @@ export function AuthProvider({ children }) {
   const logout = async () => {
     try {
       await logoutUser();
-      setUser(null);
     } catch (error) {
       console.warn("Logout failed", error);
     }

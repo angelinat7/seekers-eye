@@ -1,19 +1,21 @@
-import { View, Text, Image, ScrollView, StyleSheet } from "react-native";
-import { useTheme } from "../../context/theme/ThemeContext";
-import ButtonPrimary from "../UI/buttons/ButtonPrimary";
 import { Ionicons } from "@expo/vector-icons";
-import ButtonLink from "../UI/buttons/ButtonLink";
+import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
 import { useAuth } from "../../context/auth/AuthContext";
+import { useTheme } from "../../context/theme/ThemeContext";
+import ButtonLink from "../UI/buttons/ButtonLink";
+import ButtonPrimary from "../UI/buttons/ButtonPrimary";
 
 export default function PhotoDetailsScreen({ route, navigation }) {
   const { item } = route.params;
   const { theme } = useTheme();
   const { isAuthenticated } = useAuth();
 
+  console.log("Route params:", route.params);
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.imageContainer}>
-        <Image source={{ uri: item.imageUrl }} style={styles.image} />
+        <Image source={{ uri: item.downloadURL }} style={styles.image} />
       </View>
       <View style={{ paddingLeft: 20, paddingTop: 6 }}>
         <ButtonLink
@@ -30,7 +32,7 @@ export default function PhotoDetailsScreen({ route, navigation }) {
             {item.title}
           </Text>
           <Text style={[styles.author, { color: theme.textSecondary }]}>
-            by {item.author}
+            by {item.authorName}
           </Text>
         </View>
         {/* <View style={styles.descriptionScroll}> */}

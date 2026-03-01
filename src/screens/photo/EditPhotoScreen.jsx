@@ -1,29 +1,30 @@
 import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import {
+  ActivityIndicator,
   Image,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
   View,
 } from "react-native";
-import Header from "../../components/UI/Header";
-import { useForm } from "../../hooks/useForm";
-import { validateInputField } from "../../utils/validate-input-field";
-import { useEffect, useState } from "react";
+import Toast from "react-native-toast-message";
 import ButtonLink from "../../components/UI/buttons/ButtonLink";
 import ButtonOutlined from "../../components/UI/buttons/ButtonOutlined";
 import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
 import FormInput from "../../components/UI/FormInput";
-import { useTheme } from "../../context/theme/ThemeContext";
+import Header from "../../components/UI/Header";
 import { EDIT_PHOTO_FIELDS } from "../../constants/input-fields";
+import { useTheme } from "../../context/theme/ThemeContext";
+import { useForm } from "../../hooks/useForm";
+import { validateInputField } from "../../utils/validate-input-field";
+import { updatePhotoDocument } from "../../services/firestore-photos-service";
 
 export default function EditPhotoScreen({ route }) {
   const { theme } = useTheme();
   const { photo } = route.params;
   const [loading, setLoading] = useState(false);
-  // const [description, setDescription] = useState(photo.description ?? "");
   const navigation = useNavigation();
 
   const initialValues = {
@@ -52,22 +53,59 @@ export default function EditPhotoScreen({ route }) {
     navigation.goBack();
   };
 
-  const onSaveHandler = () => {
-    // TODO add logic for picture upload
-
+  const onSaveHandler = async () => {
     const formErrors = validateForm(EDIT_PHOTO_FIELDS);
 
     if (Object.keys(formErrors).length > 0) {
-      Alert.alert("Form Error", "please review the form and try again");
+      Toast.show({
+        type: "error",
+        text1: "Form Error",
+        text2: "Please review the form and try again",
+        position: "bottom",
+        bottomOffset: 200,
+      });
       return;
     }
-    try {
-      setLoading(true);
-      updateProfile(profile.uid, {
-        username: values.username,
+    const updates = {};
+    // Check title change
+    if (values.title && values.title.trim() !== photo.title) {
+      updates.title = values.title.trim();
+    }
+    // Check description change
+    if (values.description && values.description.trim() !== photo.description) {
+      updates.description = values.description.trim();
+    }
+    console.log("EditPhotoScreen, updates: ", updates);
+    if (Object.keys(updates).length === 0) {
+      Toast.show({
+        type: "error",
+        text1: "No changes made",
+        text2: "Please review the form and try again",
       });
+      return;
+    }
+    // Firestore update
+    setLoading(true);
+    try {
+      await updatePhotoDocument(photo.id, updates);
+      Toast.show({
+        type: "success",
+        text1: "Photo successfully updated",
+        position: "bottom",
+        bottomOffset: 200,
+      });
+      navigation.goBack();
     } catch (error) {
-      Alert.alert("Form error", "Failed to update photo]");
+      console.warn(error);
+      Toast.show({
+        type: "error",
+        text1: "Failed to update",
+        text2: `${error.message}`,
+        position: "bottom",
+        bottomOffset: 200,
+      });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -95,7 +133,7 @@ export default function EditPhotoScreen({ route }) {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.imgContainer}>
-            <Image source={{ uri: photo.imageUrl }} style={styles.image} />
+            <Image source={{ uri: photo.downloadURL }} style={styles.image} />
           </View>
           <View>
             <FormInput
@@ -128,6 +166,7 @@ export default function EditPhotoScreen({ route }) {
               color={theme.error}
               style={{ width: "16%" }}
             />
+            {loading && <ActivityIndicator size="large" color={theme.info} />}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

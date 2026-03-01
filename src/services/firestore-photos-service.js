@@ -1,15 +1,18 @@
 import {
   addDoc,
   collection,
+  deleteDoc,
+  doc,
   getDocs,
   orderBy,
   query,
   serverTimestamp,
+  updateDoc,
   where,
   writeBatch,
 } from "firebase/firestore";
-import { uploadImageToStorage } from "./firebase-storage-service";
 import { db } from "../config/firebase-config";
+import { uploadImageToStorage } from "./firebase-storage-service";
 
 /**
  * Firestore service for 'photos' collection
@@ -37,7 +40,31 @@ export const getAllPhotos = async () => {
   const snapshot = await getDocs(q);
   return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
 };
+/**
+ * Fetches photo documents created by specific user.
+ *  @param {string} uid - The user's unique ID.
+ * @returns {Promise<Array<Object>>} A promise that resolves to an array of photo objects.
+ */
+export const getPhotosByUser = async (uid) => {
+  const q = query(photosRef, where("authorId", "==", uid));
+  const snapshot = await getDocs(q);
+  return snapshot.docs.map((doc) => ({ id: doc.id, ...doc.data() }));
+};
 
+/**
+ * Deletes a photo document by its Firestore document ID.
+ *
+ * @param {string} photoId - The Firestore document ID of the photo.
+ * @returns {Promise<void>} A promise that resolves when the document is deleted.
+ */
+export const deletePhotoById = async (photoId) => {
+  if (!photoId) {
+    throw new Error("Photo ID is required to delete a document.");
+  }
+
+  const photoDocRef = doc(db, "photos", photoId); // "photos" = your collection name
+  await deleteDoc(photoDocRef);
+};
 /**
  * Uploads a contest photo and creates a Firestore document.
  * @param {Object} params - Photo details.
