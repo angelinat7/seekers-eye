@@ -1,5 +1,5 @@
 import * as ImagePicker from "expo-image-picker";
-import { Alert } from "react-native";
+import Toast from "react-native-toast-message";
 
 const pickImage = async ({ source, onPick, options, onLoadingChange }) => {
   const { allowsEditing = true, aspect = [1, 1], quality = 0.6 } = options;
@@ -9,20 +9,26 @@ const pickImage = async ({ source, onPick, options, onLoadingChange }) => {
     if (source === "camera") {
       permissionResult = await ImagePicker.requestCameraPermissionsAsync();
       if (!permissionResult.granted) {
-        Alert.alert(
-          "Permission required",
-          "Permission to access camera is required.",
-        );
+        Toast.show({
+          type: "error",
+          text1: "Permission required",
+          text2: "Permission to access camera is required.",
+          position: "bottom",
+          bottomOffset: 200,
+        });
         return;
       }
     } else if (source === "gallery") {
       permissionResult =
         await ImagePicker.requestMediaLibraryPermissionsAsync();
       if (!permissionResult.granted) {
-        Alert.alert(
-          "Permission required",
-          "Permission to access media library is required.",
-        );
+        Toast.show({
+          type: "error",
+          text1: "Permission required",
+          text2: "Permission to access media library is required.",
+          position: "bottom",
+          bottomOffset: 200,
+        });
         return;
       }
     }

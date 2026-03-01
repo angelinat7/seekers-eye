@@ -1,9 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -11,17 +10,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Toast from "react-native-toast-message";
 import Avatar from "../../components/UI/Avatar";
 import FormInput from "../../components/UI/FormInput";
 import Header from "../../components/UI/Header";
 import ButtonLink from "../../components/UI/buttons/ButtonLink";
 import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
+import { EDIT_PROFILE_FIELDS } from "../../constants/input-fields";
 import { useAuth } from "../../context/auth/AuthContext";
 import { useTheme } from "../../context/theme/ThemeContext";
-import { EDIT_PROFILE_FIELDS } from "../../constants/input-fields";
 import { useForm } from "../../hooks/useForm";
-import { validateInputField } from "../../utils/validate-input-field";
 import { uploadImageToStorage } from "../../services/firebase-storage-service";
+import { validateInputField } from "../../utils/validate-input-field";
 
 export default function EditProfileScreen() {
   const { theme } = useTheme();
@@ -56,7 +56,13 @@ export default function EditProfileScreen() {
   const handleSave = async () => {
     const formErrors = validateForm(EDIT_PROFILE_FIELDS);
     if (Object.keys(formErrors).length > 0) {
-      Alert.alert("Form Error", "Please review the form and try again");
+      Toast.show({
+        type: "error",
+        text1: "Form Error",
+        text2: "Please review the form and try again",
+        position: "bottom",
+        bottomOffset: 200,
+      });
       return;
     }
 
@@ -75,10 +81,6 @@ export default function EditProfileScreen() {
           updates.photoUrl = downloadURL;
         } catch (error) {
           console.warn("Avatar upload failed", error);
-          Alert.alert(
-            "Upload failed",
-            "Could not upload avatar. Please try again.",
-          );
         } finally {
           setLoading(false);
         }
@@ -93,7 +95,11 @@ export default function EditProfileScreen() {
     }
 
     if (Object.keys(updates).length === 0) {
-      Alert.alert("No changes made");
+      Toast.show({
+        type: "error",
+        text1: "No changes made",
+        text2: "Please review the form and try again",
+      });
       return;
     }
 
@@ -101,12 +107,22 @@ export default function EditProfileScreen() {
     setLoading(true);
     try {
       await updateProfile(profile.uid, updates);
+      Toast.show({
+        type: "success",
+        text1: "Upload completed",
+        position: "bottom",
+        bottomOffset: 200,
+      });
       navigation.goBack();
     } catch (error) {
-      Alert.alert(
-        "Update failed",
-        "Something went wrong while updating your profile. Please try again.",
-      );
+      Toast.show({
+        type: "error",
+        text1: "Update failed",
+        text2:
+          "Something went wrong while updating your profile. Please try again.",
+        position: "bottom",
+        bottomOffset: 200,
+      });
     } finally {
       setLoading(false);
     }

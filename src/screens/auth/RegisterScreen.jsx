@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { ActivityIndicator, Alert, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import Toast from "react-native-toast-message";
 import AuthLayout from "../../components/UI/AuthLayout";
 import ButtonLink from "../../components/UI/buttons/ButtonLink";
 import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
@@ -35,10 +36,13 @@ export default function RegisterScreen({ navigation, route }) {
     const formErrors = validateForm(REGISTER_FIELDS);
 
     if (Object.keys(formErrors).length > 0) {
-      Alert.alert(
-        "Form Error",
-        "Please review the highlighted fields and try again",
-      );
+      Toast.show({
+        type: "error",
+        text1: "Form Error",
+        text2: "Please review the highlighted fields and try again",
+        position: "bottom",
+        bottomOffset: 200,
+      });
       return;
     }
 
@@ -55,7 +59,13 @@ export default function RegisterScreen({ navigation, route }) {
         REDIRECT_ROUTES[redirectTo] || REDIRECT_ROUTES[RedirectTargets.HOME];
       navigation.replace("TabNavigator", targetRoute);
     } catch (error) {
-      Alert.alert("Register failed", error?.message ?? "Something went wrong");
+      Toast.show({
+        type: "error",
+        text1: "Login failed",
+        text2: `${error?.message}` ?? "Something went wrong",
+        position: "bottom",
+        bottomOffset: 200,
+      });
     } finally {
       setLoading(false);
     }

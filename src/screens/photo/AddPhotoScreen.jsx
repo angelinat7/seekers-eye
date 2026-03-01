@@ -2,13 +2,13 @@ import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
   StyleSheet,
   View,
 } from "react-native";
+import Toast from "react-native-toast-message";
 import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
 import FormInput from "../../components/UI/FormInput";
 import Header from "../../components/UI/Header";
@@ -44,12 +44,24 @@ export default function AddPhotoScreen() {
     // validate form
     const formErrors = validateForm(ADD_PHOTO_FIELDS);
     if (Object.keys(formErrors).length > 0) {
-      Alert.alert("Form Error", "Please review the form and try again");
+      Toast.show({
+        type: "error",
+        text1: "Form Error",
+        text2: "Please review the form and try again",
+        position: "bottom",
+        bottomOffset: 200,
+      });
       return;
     }
 
     if (!selectedImage) {
-      Alert.alert("No image selected", "Please select an image and try again");
+      Toast.show({
+        type: "error",
+        text1: "No image selected",
+        text2: "Please select an image and try again",
+        position: "bottom",
+        bottomOffset: 200,
+      });
       return;
     }
 
@@ -73,7 +85,13 @@ export default function AddPhotoScreen() {
         storagePath,
       );
 
-      Alert.alert("Photo uploaded successfully");
+      Toast.show({
+        type: "success",
+        text1: "Photo uploaded successfully",
+        text2: "Your photo is now live in the contest!",
+        position: "bottom",
+        bottomOffset: 200,
+      });
       setSelectedImage(null);
 
       navigation.reset({
@@ -82,10 +100,13 @@ export default function AddPhotoScreen() {
       });
     } catch (error) {
       console.warn("Upload error: ", error);
-      Alert.alert(
-        "Uploading Error",
-        "Something went wrong during upload. Please try again",
-      );
+      Toast.show({
+        type: "error",
+        text1: "Uploading Error",
+        text2: "Something went wrong during upload. Please try again",
+        position: "bottom",
+        bottomOffset: 200,
+      });
     } finally {
       setLoading(false);
     }
