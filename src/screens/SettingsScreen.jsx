@@ -1,8 +1,8 @@
-import { View, Text, StyleSheet } from "react-native";
-import ThemeSwitch from "../components/UI/ThemeSwitch";
-import { useTheme } from "../context/theme/ThemeContext";
+import { StyleSheet, Text, View } from "react-native";
 import Header from "../components/UI/Header";
+import ThemeSwitch from "../components/UI/ThemeSwitch";
 import ButtonLink from "../components/UI/buttons/ButtonLink";
+import { useTheme } from "../context/theme/ThemeContext";
 
 export default function SettingsScreen({ navigation }) {
   const { theme, mode, changeMode } = useTheme();

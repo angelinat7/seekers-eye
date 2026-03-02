@@ -1,7 +1,7 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
-import { useTheme } from "../context/theme/ThemeContext";
-import Header from "../components/UI/Header";
 import { Ionicons } from "@expo/vector-icons";
+import { ScrollView, StyleSheet, Text, View } from "react-native";
+import Header from "../components/UI/Header";
+import { useTheme } from "../context/theme/ThemeContext";
 
 export default function InformationScreen() {
   const { theme } = useTheme();

@@ -133,7 +133,7 @@ export default function PhotoDetailsScreen({ route, navigation }) {
                 <Text
                   style={[styles.photoLikes, { color: theme.textSecondary }]}
                 >
-                  {likes} votes
+                  {likes} {likes === 1 ? "vote" : "votes"}
                 </Text>
               </View>
               <View style={styles.timerContainer}>

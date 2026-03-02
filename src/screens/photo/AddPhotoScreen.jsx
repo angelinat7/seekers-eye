@@ -1,7 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useState } from "react";
 import {
-  ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
   ScrollView,

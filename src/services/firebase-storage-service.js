@@ -1,6 +1,6 @@
-import { storage } from "../config/firebase-config";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { Platform } from "react-native";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from "../config/firebase-config";
 
 /**
  * Firebase Storage service

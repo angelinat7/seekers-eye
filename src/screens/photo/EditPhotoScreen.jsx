@@ -1,4 +1,3 @@
-import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import {
   Image,
@@ -9,6 +8,7 @@ import {
   View,
 } from "react-native";
 import Toast from "react-native-toast-message";
+import ConfirmModal from "../../components/modals/ConfirmModal";
 import ButtonLink from "../../components/UI/buttons/ButtonLink";
 import ButtonOutlined from "../../components/UI/buttons/ButtonOutlined";
 import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
@@ -17,14 +17,17 @@ import Header from "../../components/UI/Header";
 import { EDIT_PHOTO_FIELDS } from "../../constants/input-fields";
 import { useTheme } from "../../context/theme/ThemeContext";
 import { useForm } from "../../hooks/useForm";
-import { updatePhotoDocument } from "../../services/firestore-photos-service";
+import {
+  deletePhoto,
+  updatePhotoDocument,
+} from "../../services/firestore-photos-service";
 import { validateInputField } from "../../utils/validate-input-field";
 
-export default function EditPhotoScreen({ route }) {
+export default function EditPhotoScreen({ navigation, route }) {
   const { theme } = useTheme();
   const { photo } = route.params;
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation();
+  const [confirmVisible, setConfirmVisible] = useState(false);
 
   const initialValues = {
     title: "",
@@ -108,6 +111,29 @@ export default function EditPhotoScreen({ route }) {
     }
   };
 
+  const onDeleteHandler = async () => {
+    try {
+      await deletePhoto(photo.id, photo.downloadURL);
+      Toast.show({
+        type: "success",
+        text1: "Picture deleted successfully",
+        position: "bottom",
+        bottomOffset: 200,
+      });
+
+      navigation.goBack();
+    } catch (error) {
+      console.warn(error);
+      Toast.show({
+        type: "error",
+        text1: "Error deleting picture",
+        text2: "Please try again",
+        position: "bottom",
+        bottomOffset: 200,
+      });
+    }
+  };
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header variant="EDIT_PHOTO" />
@@ -159,13 +185,22 @@ export default function EditPhotoScreen({ route }) {
               iconName="save-outline"
               style={{ width: "80%" }}
               onPress={onSaveHandler}
-              loading={loading}
             />
             <ButtonOutlined
               iconName="trash-outline"
               color={theme.error}
               style={{ width: "16%" }}
-              loading={loading}
+              onPress={() => setConfirmVisible(true)}
+            />
+            <ConfirmModal
+              visible={confirmVisible}
+              title="Delete  photo"
+              message={`You are about to delete a photo from your collection.\n This action cannot be undone`}
+              onCancel={() => setConfirmVisible(false)}
+              onConfirm={() => {
+                setConfirmVisible(false);
+                onDeleteHandler();
+              }}
             />
           </View>
         </ScrollView>

@@ -52,7 +52,6 @@ export default function ImagePickerField({
             pickFromCamera(onChange, { aspect: [4, 3] }, setLoading)
           }
           disabled={loading}
-          loading={loading}
         />
         <ButtonOutlined
           color={theme.accent}
@@ -63,7 +62,6 @@ export default function ImagePickerField({
             pickFromGallery(onChange, { aspect: [4, 3] }, setLoading)
           }
           disabled={loading}
-          loading={loading}
         />
       </View>
     </View>

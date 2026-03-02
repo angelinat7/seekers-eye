@@ -1,4 +1,5 @@
 import { FIELD_LENGTHS, FIELD_PATTERNS } from "../constants/form-fields-values";
+
 export const validateInputField = (field, value, values = {}) => {
   const userInput = value.trim();
   switch (field) {

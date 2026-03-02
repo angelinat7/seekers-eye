@@ -1,9 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
   KeyboardAvoidingView,
   Platform,
   ScrollView,
@@ -11,18 +9,18 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
+import Toast from "react-native-toast-message";
 import Avatar from "../../components/UI/Avatar";
 import FormInput from "../../components/UI/FormInput";
 import Header from "../../components/UI/Header";
 import ButtonLink from "../../components/UI/buttons/ButtonLink";
 import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
+import { EDIT_PROFILE_FIELDS } from "../../constants/input-fields";
 import { useAuth } from "../../context/auth/AuthContext";
 import { useTheme } from "../../context/theme/ThemeContext";
-import { EDIT_PROFILE_FIELDS } from "../../constants/input-fields";
 import { useForm } from "../../hooks/useForm";
-import { validateInputField } from "../../utils/validate-input-field";
 import { uploadImageToStorage } from "../../services/firebase-storage-service";
-import Toast from "react-native-toast-message";
+import { validateInputField } from "../../utils/validate-input-field";
 
 export default function EditProfileScreen() {
   const { theme } = useTheme();

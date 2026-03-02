@@ -11,7 +11,6 @@ import ThemeSwitch from "../../components/UI/ThemeSwitch";
 import { db } from "../../config/firebase-config";
 import { useAuth } from "../../context/auth/AuthContext";
 import { useTheme } from "../../context/theme/ThemeContext";
-import { getPhotosByUser } from "../../services/firestore-photos-service";
 
 export default function ProfileScreen({ navigation }) {
   const { theme, mode, changeMode, ready } = useTheme();
@@ -94,11 +93,7 @@ export default function ProfileScreen({ navigation }) {
               data={userPhotos}
               showsVerticalScrollIndicator={false}
               renderItem={({ item }) => (
-                <ProfilePhotoCard
-                  item={item}
-                  theme={theme}
-                  setUserPhotos={setUserPhotos}
-                />
+                <ProfilePhotoCard item={item} theme={theme} />
               )}
               keyExtractor={(item) => item.id}
             />

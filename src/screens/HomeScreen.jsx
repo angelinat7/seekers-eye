@@ -1,18 +1,18 @@
-import { useEffect, useCallback, useState } from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
+  RefreshControl,
   StyleSheet,
   Text,
   View,
-  RefreshControl,
 } from "react-native";
+import Toast from "react-native-toast-message";
 import Header from "../components/UI/Header";
 import ContestPhotoCard from "../components/UI/cards/ContestPhotoCard";
 import { useTheme } from "../context/theme/ThemeContext";
 import { getAllPhotos } from "../services/firestore-photos-service";
-import Toast from "react-native-toast-message";
-import { useFocusEffect } from "@react-navigation/native";
 
 export default function HomeScreen({ navigation }) {
   const { theme } = useTheme();
