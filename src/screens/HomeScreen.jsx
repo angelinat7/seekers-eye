@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useCallback, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -12,6 +12,7 @@ import ContestPhotoCard from "../components/UI/cards/ContestPhotoCard";
 import { useTheme } from "../context/theme/ThemeContext";
 import { getAllPhotos } from "../services/firestore-photos-service";
 import Toast from "react-native-toast-message";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function HomeScreen({ navigation }) {
   const { theme } = useTheme();
@@ -23,7 +24,6 @@ export default function HomeScreen({ navigation }) {
     try {
       const data = await getAllPhotos();
       setPhotos(data);
-      // console.log("Photos: ", data);
     } catch (error) {
       Toast.show({
         type: "error",
@@ -39,6 +39,12 @@ export default function HomeScreen({ navigation }) {
   useEffect(() => {
     fetchPhotos();
   }, []);
+
+  useFocusEffect(
+    useCallback(() => {
+      fetchPhotos();
+    }, []),
+  );
 
   const onRefresh = () => {
     fetchPhotos();

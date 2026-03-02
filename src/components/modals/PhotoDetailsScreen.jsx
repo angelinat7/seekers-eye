@@ -1,23 +1,98 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { useMemo, useRef, useState } from "react";
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+} from "react-native";
+import Toast from "react-native-toast-message";
 import { useAuth } from "../../context/auth/AuthContext";
 import { useTheme } from "../../context/theme/ThemeContext";
+import { toggleLike } from "../../services/firestore-photos-service";
+import { isVotingClosed } from "../../utils/is-voting-closed";
 import ButtonLink from "../UI/buttons/ButtonLink";
 import ButtonPrimary from "../UI/buttons/ButtonPrimary";
+import VotingTimer from "../UI/VotingTimer";
 
 export default function PhotoDetailsScreen({ route, navigation }) {
   const { item } = route.params;
   const { theme } = useTheme();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
+  const [isLiked, setIsLiked] = useState(
+    item.likedBy?.includes(profile.uid) ?? false,
+  );
+  const [likes, setLikes] = useState(item?.likes ?? 0);
+  const [loading, setLoading] = useState(false);
 
-  console.log("Route params:", route.params);
+  const votingClosed = useMemo(
+    () => isVotingClosed(item.votingEndsAt),
+    [item.votingEndsAt],
+  );
+
+  const handleLike = async () => {
+    if (!isAuthenticated) {
+      navigation.navigate("Login");
+      return;
+    }
+    if (votingClosed || loading) return;
+
+    const newLikedState = !isLiked;
+    setIsLiked(newLikedState);
+
+    setLikes((prev) => prev + (newLikedState ? 1 : -1));
+
+    setLoading(true);
+    try {
+      await toggleLike(item.id, profile.uid);
+    } catch (error) {
+      console.warn(error);
+      setIsLiked(newLikedState);
+      setLikes((prev) => prev + (newLikedState ? -1 : 1));
+      Toast.show({
+        type: "error",
+        text1: "Error toggling like",
+        text1: "Please try again",
+        position: "bottom",
+        bottomOffset: 200,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const { buttonTitle, buttonIcon } = useMemo(() => {
+    if (!isAuthenticated)
+      return {
+        buttonTitle: "Login to vote",
+        buttonIcon: "lock-closed-outline",
+      };
+    if (votingClosed) {
+      return {
+        buttonTitle: "Voting closed",
+        buttonIcon: "lock-closed",
+      };
+    }
+
+    return isLiked
+      ? {
+          buttonTitle: "Remove vote",
+          buttonIcon: "heart",
+        }
+      : {
+          buttonTitle: "Vote for this photo",
+          buttonIcon: "heart-outline",
+        };
+  }, [isAuthenticated, votingClosed, isLiked]);
 
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <View style={styles.imageContainer}>
         <Image source={{ uri: item.downloadURL }} style={styles.image} />
       </View>
-      <View style={{ paddingLeft: 20, paddingTop: 6 }}>
+      <View style={{ paddingLeft: 20, paddingTop: 16 }}>
         <ButtonLink
           iconName="arrow-back"
           iconSize={18}
@@ -35,7 +110,6 @@ export default function PhotoDetailsScreen({ route, navigation }) {
             by {item.authorName}
           </Text>
         </View>
-        {/* <View style={styles.descriptionScroll}> */}
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.descriptionContent}
@@ -45,37 +119,37 @@ export default function PhotoDetailsScreen({ route, navigation }) {
             {item.description}
           </Text>
         </ScrollView>
-        {/* </View> */}
 
         <View style={styles.cardWrapper}>
           <View style={[styles.votingCard, { backgroundColor: theme.surface }]}>
             <View style={styles.cardRowContainer}>
               <View style={styles.likesContainer}>
                 <Ionicons
-                  name="heart-outline"
+                  name={isLiked ? "heart" : "heart-outline"}
                   size={18}
-                  color={theme.textSecondary}
+                  color={theme.error}
                 />
+
                 <Text
                   style={[styles.photoLikes, { color: theme.textSecondary }]}
                 >
-                  {item.likes} votes
+                  {likes} votes
                 </Text>
               </View>
               <View style={styles.timerContainer}>
-                <Ionicons
-                  name="lock-closed-outline"
-                  size={16}
-                  color={theme.textSecondary}
+                <VotingTimer
+                  votingEndsAt={item.votingEndsAt.toDate()}
+                  color={theme.accent}
                 />
-                <Text style={[styles.time, { color: theme.textSecondary }]}>
-                  Voting closed
-                </Text>
               </View>
             </View>
+
             <ButtonPrimary
-              title="Vote for this photo"
-              iconName="heart-outline"
+              title={buttonTitle}
+              iconName={buttonIcon}
+              disabled={loading || votingClosed}
+              onPress={handleLike}
+              loading={loading}
             />
           </View>
         </View>
