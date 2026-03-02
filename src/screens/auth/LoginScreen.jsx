@@ -106,6 +106,7 @@ export default function LoginScreen({ navigation, route }) {
             iconName="log-in-outline"
             onPress={handleLogin}
             disabled={loading}
+            loading={loading}
           />
         </View>
 

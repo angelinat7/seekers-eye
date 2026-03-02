@@ -133,6 +133,7 @@ export default function EditProfilePhotoModal({ navigation, route }) {
               title="Save picture"
               iconName="save-outline"
               onPress={handleSave}
+              loading={loading}
             />
           </View>
         </View>

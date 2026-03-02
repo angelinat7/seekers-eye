@@ -19,17 +19,6 @@ export default function ProfileScreen({ navigation }) {
   const [userPhotos, setUserPhotos] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchUserPhotos = async () => {
-    try {
-      const data = await getPhotosByUser(profile.uid);
-      setUserPhotos(data);
-    } catch (error) {
-      console.warn(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
     if (!profile?.uid) return;
 
@@ -120,6 +109,7 @@ export default function ProfileScreen({ navigation }) {
             title="Logout"
             onPress={logoutHandler}
             iconName={"log-out-outline"}
+            loading={loading}
           />
         </View>
       </View>

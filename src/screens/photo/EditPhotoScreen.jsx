@@ -1,7 +1,6 @@
 import { useNavigation } from "@react-navigation/native";
 import { useEffect, useState } from "react";
 import {
-  ActivityIndicator,
   Image,
   KeyboardAvoidingView,
   Platform,
@@ -18,8 +17,8 @@ import Header from "../../components/UI/Header";
 import { EDIT_PHOTO_FIELDS } from "../../constants/input-fields";
 import { useTheme } from "../../context/theme/ThemeContext";
 import { useForm } from "../../hooks/useForm";
-import { validateInputField } from "../../utils/validate-input-field";
 import { updatePhotoDocument } from "../../services/firestore-photos-service";
+import { validateInputField } from "../../utils/validate-input-field";
 
 export default function EditPhotoScreen({ route }) {
   const { theme } = useTheme();
@@ -160,13 +159,14 @@ export default function EditPhotoScreen({ route }) {
               iconName="save-outline"
               style={{ width: "80%" }}
               onPress={onSaveHandler}
+              loading={loading}
             />
             <ButtonOutlined
               iconName="trash-outline"
               color={theme.error}
               style={{ width: "16%" }}
+              loading={loading}
             />
-            {loading && <ActivityIndicator size="large" color={theme.info} />}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

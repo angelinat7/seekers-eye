@@ -159,8 +159,8 @@ export default function AddPhotoScreen() {
               iconName="cloud-upload-outline"
               disabled={loading}
               onPress={handleUploadPhoto}
+              loading={loading}
             />
-            {loading && <ActivityIndicator size="large" color={theme.info} />}
           </View>
         </ScrollView>
       </KeyboardAvoidingView>

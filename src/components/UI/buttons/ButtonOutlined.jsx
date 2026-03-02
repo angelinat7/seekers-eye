@@ -1,11 +1,18 @@
-import { Pressable, View, Text, StyleSheet } from "react-native";
-import { useTheme } from "../../../context/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
+import {
+  ActivityIndicator,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { useTheme } from "../../../context/theme/ThemeContext";
 
 export default function ButtonOutlined({
   title,
   iconName,
   disabled = false,
+  loading = false,
   onPress,
   size = 18,
   color,
@@ -35,6 +42,11 @@ export default function ButtonOutlined({
         )}
         <Text style={[styles.title, { color: buttonColor }]}>{title}</Text>
       </View>
+      {loading && (
+        <View style={styles.loaderOverlay}>
+          <ActivityIndicator size="small" color={color} />
+        </View>
+      )}
     </Pressable>
   );
 }
@@ -62,5 +74,10 @@ const styles = StyleSheet.create({
   },
   pressed: {
     transform: [{ scale: 0.97 }],
+  },
+  loaderOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

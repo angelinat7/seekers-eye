@@ -203,8 +203,8 @@ export default function EditProfileScreen() {
               size={18}
               onPress={handleSave}
               disabled={loading}
+              loading={loading}
             />
-            {loading && <ActivityIndicator size="large" color={theme.info} />}
           </View>
         </View>
       </ScrollView>

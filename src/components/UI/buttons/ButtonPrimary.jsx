@@ -1,4 +1,10 @@
-import { Pressable, View, Text, StyleSheet } from "react-native";
+import {
+  Pressable,
+  View,
+  Text,
+  StyleSheet,
+  ActivityIndicator,
+} from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useTheme } from "../../../context/theme/ThemeContext";
 import { Ionicons } from "@expo/vector-icons";
@@ -7,6 +13,7 @@ export default function ButtonPrimary({
   title,
   iconName,
   disabled = false,
+  loading = false,
   onPress,
   style,
 }) {
@@ -42,6 +49,11 @@ export default function ButtonPrimary({
               {title}
             </Text>
           </View>
+          {loading && (
+            <View style={styles.loaderOverlay}>
+              <ActivityIndicator size="small" color={theme.info} />
+            </View>
+          )}
         </LinearGradient>
       )}
     </Pressable>
@@ -74,5 +86,10 @@ const styles = StyleSheet.create({
   },
   pressed: {
     transform: [{ scale: 0.97 }],
+  },
+  loaderOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

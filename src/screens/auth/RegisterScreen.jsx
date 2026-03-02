@@ -132,6 +132,7 @@ export default function RegisterScreen({ navigation, route }) {
             iconName="person-add-outline"
             onPress={handleRegister}
             disabled={loading}
+            loading={loading}
           />
         </View>
 
@@ -139,15 +140,11 @@ export default function RegisterScreen({ navigation, route }) {
           <Text style={[styles.info, { color: theme.textSecondary }]}>
             Already have an account?
           </Text>
-          {loading ? (
-            <ActivityIndicator style={{ marginTop: 30 }} />
-          ) : (
-            <ButtonLink
-              title="Login here"
-              colorKey="accent"
-              onPress={handleNavigateToLogin}
-            />
-          )}
+          <ButtonLink
+            title="Login here"
+            colorKey="accent"
+            onPress={handleNavigateToLogin}
+          />
         </View>
       </View>
     </AuthLayout>
