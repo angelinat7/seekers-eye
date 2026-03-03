@@ -54,8 +54,8 @@ export default function ContestPhotoCard({ photo, onPress }) {
 
 const styles = StyleSheet.create({
   container: {
+    marginTop: 8,
     borderRadius: 8,
-    marginBottom: 12,
     overflow: "hidden",
   },
   imgContainer: {
