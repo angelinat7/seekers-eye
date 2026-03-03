@@ -61,7 +61,7 @@ export default function RegisterScreen({ navigation, route }) {
     } catch (error) {
       Toast.show({
         type: "error",
-        text1: "Login failed",
+        text1: "Register failed",
         text2: `${error?.message}` ?? "Something went wrong",
         position: "bottom",
         bottomOffset: 200,
