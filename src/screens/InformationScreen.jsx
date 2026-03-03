@@ -5,6 +5,7 @@ import { useTheme } from "../context/theme/ThemeContext";
 
 export default function InformationScreen() {
   const { theme } = useTheme();
+
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header variant="INFO" />
@@ -12,7 +13,7 @@ export default function InformationScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* About */}
+        {/* About the App */}
         <View style={styles.section}>
           <View style={styles.headingSection}>
             <Ionicons
@@ -25,30 +26,29 @@ export default function InformationScreen() {
             </Text>
           </View>
           <Text style={[styles.text, { color: theme.textPrimary }]}>
-            Seeker's Eye Photo Contest is a community-driven photography
-            competition app where users can upload their photos and compete for
-            the highest number of votes. Each contest runs for a limited time,
-            and when voting closes, the photo with the most votes wins.
+            Seeker's Eye is a community-driven photo contest app where users
+            upload photos and compete for votes. Contests run for a limited
+            time, and the top-voted photo wins.
           </Text>
         </View>
-        {/*Voting */}
+
+        {/* Voting */}
         <View style={styles.section}>
           <View style={styles.headingSection}>
             <Ionicons name="timer-outline" size={20} color={theme.secondary} />
             <Text style={[styles.heading, { color: theme.secondary }]}>
-              How Voting Works
+              Voting
             </Text>
           </View>
           <Text style={[styles.text, { color: theme.textPrimary }]}>
-            • Each uploaded photo participates in the current contest round.
-            {"\n"}• Logged-in users can vote for their favorite photos.{"\n"}•
-            Voting is available only while the contest is active.{"\n"}• When
-            the voting period ends, the photo with the highest number of votes
-            becomes the winner.{"\n"}• Once voting is closed, no additional
-            votes can be submitted.
+            • Each photo is open for voting for one week after upload.{"\n"}•
+            Logged-in users can vote once per photo.{"\n"}• Votes are visible
+            during the voting period, which counts down in the UI.{"\n"}• Once
+            the week is over, voting closes, but the photo remains viewable.
           </Text>
         </View>
-        {/*Add Photo */}
+
+        {/* Add Photo */}
         <View style={styles.section}>
           <View style={styles.headingSection}>
             <Ionicons name="camera-outline" size={20} color={theme.secondary} />
@@ -57,29 +57,27 @@ export default function InformationScreen() {
             </Text>
           </View>
           <Text style={[styles.text, { color: theme.textPrimary }]}>
-            Authenticated users can participate in the contest by uploading a
-            photo. Photos can be selected from the device gallery or captured
-            instantly using the device camera.{"\n\n"}
-            Each submission requires a photo, a title, and a short description.
-            Once submitted, the photo becomes visible in the contest feed and
-            can receive votes from other users.
+            Authenticated users can upload photos from the device gallery or
+            camera. Each submission requires a photo, title, and description,
+            and is visible in the contest feed.
           </Text>
         </View>
-        {/*Profile */}
+
+        {/* Profile */}
         <View style={styles.section}>
           <View style={styles.headingSection}>
             <Ionicons name="person-outline" size={18} color={theme.secondary} />
             <Text style={[styles.heading, { color: theme.secondary }]}>
-              User Profile
+              Profile
             </Text>
           </View>
           <Text style={[styles.text, { color: theme.textPrimary }]}>
-            Inside the Profile tab, users can:{"\n"}• View their uploaded photos
-            {"\n"}• See their total votes{"\n"}• Edit their username{"\n"}•
-            Change their profile avatar{"\n"}• Toggle light - dark theme.
+            Users can view their photos, total votes, edit their username and
+            avatar, and toggle the theme.
           </Text>
         </View>
-        {/*Authentication */}
+
+        {/* Authentication */}
         <View style={styles.section}>
           <View style={styles.headingSection}>
             <Ionicons
@@ -93,11 +91,11 @@ export default function InformationScreen() {
           </View>
           <Text style={[styles.text, { color: theme.textPrimary }]}>
             Only authenticated users can upload photos and vote. Guests can
-            browse photos but cannot interact with voting. This ensures fairness
-            and prevents anonymous vote manipulation.
+            browse photos but cannot vote, ensuring fair contests.
           </Text>
         </View>
-        {/*App Purpose */}
+
+        {/* App Purpose */}
         <View style={styles.section}>
           <View style={styles.headingSection}>
             <Ionicons name="ribbon-outline" size={20} color={theme.secondary} />
@@ -106,19 +104,13 @@ export default function InformationScreen() {
             </Text>
           </View>
           <Text style={[styles.text, { color: theme.textPrimary }]}>
-            The Seeker's Eye app is designed to let users easily showcase their
-            photography skills, participate in contests, and engage with the
-            community.{"\n\n"}
-            Users can:{"\n"}• Upload and share photos directly from their device
-            or camera.{"\n"}• Vote for their favorite photos during active
-            contests.{"\n"}• Track their own submissions and total votes in
-            their profile.{"\n"}• Customize their profile by updating username
-            and avatar.{"\n\n"}
-            The app provides a simple, fair, and engaging experience for
-            discovering and celebrating creative photography.
+            Seeker's Eye lets users showcase photography, participate in
+            contests, vote on favorites, and track submissions. The app
+            emphasizes simplicity, fairness, and positive engagement.
           </Text>
         </View>
-        {/*Future Improvements */}
+
+        {/* Future Improvements */}
         <View style={styles.section}>
           <View style={styles.headingSection}>
             <Ionicons name="rocket-outline" size={20} color={theme.secondary} />
@@ -127,9 +119,8 @@ export default function InformationScreen() {
             </Text>
           </View>
           <Text style={[styles.text, { color: theme.textPrimary }]}>
-            Planned features for future versions include:{"\n"}• Live
-            leaderboard screen{"\n"}• Countdown timer for voting{"\n"}• Push
-            notifications for winners{"\n"}• Comment section under photos{"\n"}
+            Planned features include a live leaderboard, push notifications for
+            winners, and a photo comment section.
           </Text>
         </View>
       </ScrollView>

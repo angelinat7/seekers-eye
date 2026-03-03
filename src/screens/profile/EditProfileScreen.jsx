@@ -24,7 +24,7 @@ import { validateInputField } from "../../utils/validate-input-field";
 
 export default function EditProfileScreen() {
   const { theme } = useTheme();
-  const { profile, tempAvatar, updateProfile } = useAuth();
+  const { profile, tempAvatar, setTempAvatar, updateProfile } = useAuth();
   const navigation = useNavigation();
 
   const [loading, setLoading] = useState(false);
@@ -77,6 +77,7 @@ export default function EditProfileScreen() {
             avatarPath,
           );
           updates.photoUrl = downloadURL;
+          if (tempAvatar) setTempAvatar(null);
         } catch (error) {
           console.warn("Avatar upload failed", error);
         } finally {
