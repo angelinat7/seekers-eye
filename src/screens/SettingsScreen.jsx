@@ -9,7 +9,7 @@ export default function SettingsScreen({ navigation }) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header variant="SETTINGS" />
-      <View style={{ paddingLeft: 20, paddingVertical: 10 }}>
+      <View style={{ paddingLeft: 20, paddingVertical: 16 }}>
         <ButtonLink
           iconName="arrow-back"
           iconSize={18}

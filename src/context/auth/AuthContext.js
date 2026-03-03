@@ -6,6 +6,7 @@ export const AuthContext = createContext({
   isAuthenticated: false,
   initializing: true,
   error: null,
+  tempAvatar: null,
   async register() {},
   async login() {},
   async logout() {},

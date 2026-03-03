@@ -24,10 +24,9 @@ import { validateInputField } from "../../utils/validate-input-field";
 
 export default function EditProfileScreen() {
   const { theme } = useTheme();
-  const { profile, updateProfile } = useAuth();
+  const { profile, tempAvatar, updateProfile } = useAuth();
   const navigation = useNavigation();
 
-  const [avatar, setAvatar] = useState(profile.photoUrl ?? null);
   const [loading, setLoading] = useState(false);
 
   const initialValues = { username: "" };
@@ -49,7 +48,7 @@ export default function EditProfileScreen() {
   }, [profile]);
 
   const openPhotoModal = () => {
-    navigation.navigate("EditPhotoModal", { setAvatar });
+    navigation.navigate("EditPhotoModal");
   };
 
   const handleSave = async () => {
@@ -68,13 +67,13 @@ export default function EditProfileScreen() {
     const updates = {};
 
     // Check avatar change
-    if (avatar && avatar !== profile.photoUrl) {
-      if (avatar.startsWith("file://")) {
+    if (tempAvatar && tempAvatar !== profile.photoUrl) {
+      if (tempAvatar.startsWith("file://")) {
         setLoading(true);
         try {
           const avatarPath = `avatars/${profile.uid}/avatar.jpg`;
           const { downloadURL } = await uploadImageToStorage(
-            avatar,
+            tempAvatar,
             avatarPath,
           );
           updates.photoUrl = downloadURL;
@@ -84,7 +83,7 @@ export default function EditProfileScreen() {
           setLoading(false);
         }
       } else {
-        updates.photoUrl = avatar;
+        updates.photoUrl = tempAvatar;
       }
     }
 
@@ -139,7 +138,7 @@ export default function EditProfileScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Header variant="EDIT_PROFILE" />
-        <View style={{ paddingLeft: 20, paddingVertical: 10 }}>
+        <View style={{ paddingLeft: 20, paddingVertical: 16 }}>
           <ButtonLink
             iconName="arrow-back"
             iconSize={18}
@@ -152,7 +151,7 @@ export default function EditProfileScreen() {
         <View style={styles.content}>
           {/* Avatar preview */}
           <View style={styles.avatarContainer}>
-            <Avatar size="lg" avatar={avatar} />
+            <Avatar size="lg" avatar={tempAvatar ?? profile.photoUrl} />
 
             <TouchableOpacity
               style={[

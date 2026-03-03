@@ -1,13 +1,15 @@
 import { Ionicons } from "@expo/vector-icons";
 import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import { useTheme } from "../../context/theme/ThemeContext";
-import ButtonOutlined from "./buttons/ButtonOutlined";
-
-import { pickFromCamera, pickFromGallery } from "../../utils/pick-image";
+import { useTheme } from "../../../context/theme/ThemeContext";
+import { pickFromCamera, pickFromGallery } from "../../../utils/pick-image";
+import ButtonOutlined from "../buttons/ButtonOutlined";
+import ImageQualitySlider from "./ImageQualitySlider";
 
 export default function ImagePickerField({
   value,
   onChange,
+  quality,
+  setQuality,
   containerStyle,
   loading,
   setLoading,
@@ -21,7 +23,7 @@ export default function ImagePickerField({
       <TouchableOpacity
         style={[styles.imageBox, containerStyle, { borderColor: theme.border }]}
         onPress={() =>
-          pickFromGallery(onChange, { aspect: [4, 3] }, setLoading)
+          pickFromGallery(onChange, { aspect: [4, 3], quality }, setLoading)
         }
         disabled={loading}
       >
@@ -41,7 +43,13 @@ export default function ImagePickerField({
           </>
         )}
       </TouchableOpacity>
-
+      {value && (
+        <ImageQualitySlider
+          quality={quality}
+          setQuality={setQuality}
+          theme={theme}
+        />
+      )}
       <View style={styles.buttons}>
         <ButtonOutlined
           color={theme.accent}
@@ -49,7 +57,7 @@ export default function ImagePickerField({
           title="Take photo"
           style={{ width: "48%" }}
           onPress={() =>
-            pickFromCamera(onChange, { aspect: [4, 3] }, setLoading)
+            pickFromCamera(onChange, { aspect: [4, 3], quality }, setLoading)
           }
           disabled={loading}
         />
@@ -59,7 +67,7 @@ export default function ImagePickerField({
           title="From Gallery"
           style={{ width: "48%" }}
           onPress={() =>
-            pickFromGallery(onChange, { aspect: [4, 3] }, setLoading)
+            pickFromGallery(onChange, { aspect: [4, 3], quality }, setLoading)
           }
           disabled={loading}
         />
