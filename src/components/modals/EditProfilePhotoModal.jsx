@@ -1,7 +1,13 @@
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ScrollView,
+} from "react-native";
 import { useAuth } from "../../context/auth/AuthContext";
 import { useTheme } from "../../context/theme/ThemeContext";
 import { pickFromCamera, pickFromGallery } from "../../utils/pick-image";
@@ -9,31 +15,31 @@ import Avatar from "../UI/Avatar";
 import Header from "../UI/Header";
 import ButtonLink from "../UI/buttons/ButtonLink";
 import ButtonPrimary from "../UI/buttons/ButtonPrimary";
+import ImageQualitySlider from "../UI/image/ImageQualitySlider";
 
 export default function EditProfilePhotoModal({ navigation, route }) {
   const { theme } = useTheme();
-  const { profile } = useAuth();
+  const { profile, setTempAvatar } = useAuth();
 
-  const { setAvatar } = route.params;
-
-  const [image, setImage] = useState(profile.photoUrl ?? null);
+  const image = profile.photoUrl ?? null;
+  const [newImage, setNewImage] = useState(null);
+  const [quality, setQuality] = useState(1);
   const [loading, setLoading] = useState(false);
 
   const handleSave = async () => {
-    if (!image) return;
-    setAvatar(image); // pass local uri back to parent
+    if (!newImage) return;
+    setTempAvatar(newImage); // pass local uri back to parent
     navigation.goBack();
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header variant="EDIT_PROFILE_PHOTO" />
       <View
-        style={{
-          paddingLeft: 20,
-          paddingVertical: 10,
-          backgroundColor: theme.background,
-        }}
+        style={[
+          styles.buttonsTopContainer,
+          { backgroundColor: theme.background },
+        ]}
       >
         <ButtonLink
           iconName="arrow-back"
@@ -42,102 +48,147 @@ export default function EditProfilePhotoModal({ navigation, route }) {
           title="Back"
           onPress={() => navigation.goBack()}
         />
+        {newImage && (
+          <ButtonPrimary
+            title="Save picture"
+            iconName="save-outline"
+            onPress={handleSave}
+            loading={loading}
+            style={{ width: "45%" }}
+          />
+        )}
       </View>
-      <View style={[styles.content, { backgroundColor: theme.tab.background }]}>
-        <View style={styles.avatarContainer}>
-          <Avatar size="xl" avatar={image} />
-          {image && (
-            <View style={styles.infoMessage}>
-              <Ionicons
-                name="checkmark-outline"
-                size={20}
-                color={theme.success}
-              />
-              <Text style={[styles.infoText, { color: theme.success }]}>
-                Image selected
-              </Text>
-            </View>
-          )}
-        </View>
-        <View style={styles.scrollContent}>
-          <TouchableOpacity
-            style={[
-              styles.buttonCard,
-              {
-                backgroundColor: theme.tab.background,
-                color: theme.textSecondary,
-                borderColor: theme.border,
-              },
-            ]}
-            onPress={() =>
-              pickFromCamera((img) => setImage(img.uri), setLoading)
-            }
-            disabled={loading}
-          >
-            <LinearGradient
-              style={styles.linearGradient}
-              colors={[theme.gradient.start, theme.gradient.end]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-            >
-              <Ionicons name="camera-outline" size={20} color={theme.surface} />
-            </LinearGradient>
-            <View style={styles.textContainer}>
-              <Text
-                style={[styles.buttonTitle, { color: theme.textSecondary }]}
-              >
-                Take Photo
-              </Text>
-              <Text style={[styles.buttonText, { color: theme.textSecondary }]}>
-                Use your camera to capture a photo
-              </Text>
-            </View>
-          </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[
-              styles.buttonCard,
-              {
-                backgroundColor: theme.tab.background,
-                color: theme.textSecondary,
-                borderColor: theme.border,
-              },
-            ]}
-            onPress={() =>
-              pickFromGallery((img) => setImage(img.uri), setLoading)
-            }
-            disabled={loading}
-          >
-            <LinearGradient
-              style={styles.linearGradient}
-              colors={[theme.gradient.start, theme.gradient.end]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 0 }}
-            >
-              <Ionicons name="images-outline" size={20} color={theme.surface} />
-            </LinearGradient>
-            <View style={styles.textContainer}>
-              <Text
-                style={[styles.buttonTitle, { color: theme.textSecondary }]}
-              >
-                Choose from Gallery
-              </Text>
-              <Text style={[styles.buttonText, { color: theme.textSecondary }]}>
-                Select a photo from your library
-              </Text>
-            </View>
-          </TouchableOpacity>
-
-          <View style={styles.submitButtonContainer}>
-            <ButtonPrimary
-              title="Save picture"
-              iconName="save-outline"
-              onPress={handleSave}
-              loading={loading}
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.descriptionContent}
+        style={{ flex: 1 }}
+      >
+        <View
+          style={[styles.content, { backgroundColor: theme.tab.background }]}
+        >
+          <View style={styles.avatarContainer}>
+            <Avatar size="xl" avatar={newImage ? newImage : image} />
+            {newImage && (
+              <View style={styles.infoMessage}>
+                <Ionicons
+                  name="checkmark-outline"
+                  size={20}
+                  color={theme.success}
+                />
+                <Text style={[styles.infoText, { color: theme.success }]}>
+                  Image selected
+                </Text>
+              </View>
+            )}
+          </View>
+          {newImage && (
+            <ImageQualitySlider
+              quality={quality}
+              setQuality={setQuality}
+              theme={theme}
             />
+          )}
+          <View style={styles.scrollContent}>
+            <TouchableOpacity
+              style={[
+                styles.buttonCard,
+                {
+                  backgroundColor: theme.tab.background,
+                  color: theme.textSecondary,
+                  borderColor: theme.border,
+                },
+              ]}
+              onPress={() =>
+                pickFromCamera(
+                  (img) => setNewImage(img.uri),
+                  { quality },
+                  setLoading,
+                )
+              }
+              disabled={loading}
+            >
+              <LinearGradient
+                style={styles.linearGradient}
+                colors={[theme.gradient.start, theme.gradient.end]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Ionicons
+                  name="camera-outline"
+                  size={20}
+                  color={theme.surface}
+                />
+              </LinearGradient>
+              <View style={styles.textContainer}>
+                <Text
+                  style={[styles.buttonTitle, { color: theme.textSecondary }]}
+                >
+                  Take Photo
+                </Text>
+                <Text
+                  style={[styles.buttonText, { color: theme.textSecondary }]}
+                >
+                  Use your camera to capture a photo
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[
+                styles.buttonCard,
+                {
+                  backgroundColor: theme.tab.background,
+                  color: theme.textSecondary,
+                  borderColor: theme.border,
+                },
+              ]}
+              onPress={() =>
+                pickFromGallery(
+                  (img) => setNewImage(img.uri),
+                  { quality },
+                  setLoading,
+                )
+              }
+              disabled={loading}
+            >
+              <LinearGradient
+                style={styles.linearGradient}
+                colors={[theme.gradient.start, theme.gradient.end]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 0 }}
+              >
+                <Ionicons
+                  name="images-outline"
+                  size={20}
+                  color={theme.surface}
+                />
+              </LinearGradient>
+              <View style={styles.textContainer}>
+                <Text
+                  style={[styles.buttonTitle, { color: theme.textSecondary }]}
+                >
+                  Choose from Gallery
+                </Text>
+                <Text
+                  style={[styles.buttonText, { color: theme.textSecondary }]}
+                >
+                  Select a photo from your library
+                </Text>
+              </View>
+            </TouchableOpacity>
+
+            <View style={styles.submitButtonContainer}>
+              <ButtonPrimary
+                title="Save picture"
+                iconName="save-outline"
+                onPress={handleSave}
+                loading={loading}
+              />
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -147,14 +198,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   content: {
+    flex: 1,
     padding: 16,
     gap: 20,
     flex: 1,
   },
+  buttonsTopContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+  },
   avatarContainer: {
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 20,
   },
   avatarImageContainer: {
     alignItems: "center",
@@ -172,7 +230,7 @@ const styles = StyleSheet.create({
   infoMessage: {
     flexDirection: "row",
     gap: 10,
-    paddingTop: 16,
+    paddingTop: 12,
   },
   infoText: {
     fontSize: 12,

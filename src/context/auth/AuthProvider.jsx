@@ -17,6 +17,7 @@ import { syncUserPhotos } from "../../services/firestore-photos-service";
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [profile, setProfile] = useState({});
+  const [tempAvatar, setTempAvatar] = useState(null);
   const [initializing, setInitializing] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -118,6 +119,8 @@ export function AuthProvider({ children }) {
       profile,
       isAuthenticated,
       initializing,
+      tempAvatar,
+      setTempAvatar,
       login,
       register,
       logout,

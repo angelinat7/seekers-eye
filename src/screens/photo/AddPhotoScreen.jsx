@@ -11,7 +11,7 @@ import Toast from "react-native-toast-message";
 import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
 import FormInput from "../../components/UI/FormInput";
 import Header from "../../components/UI/Header";
-import ImagePickerField from "../../components/UI/ImagePickerField";
+import ImagePickerField from "../../components/UI/image/ImagePickerField";
 import { ADD_PHOTO_FIELDS } from "../../constants/input-fields";
 import { useAuth } from "../../context/auth/AuthContext";
 import { useTheme } from "../../context/theme/ThemeContext";
@@ -25,6 +25,7 @@ export default function AddPhotoScreen() {
   const { profile } = useAuth();
 
   const [selectedImage, setSelectedImage] = useState(null);
+  const [quality, setQuality] = useState(1);
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
 
@@ -149,6 +150,8 @@ export default function AddPhotoScreen() {
           <ImagePickerField
             value={selectedImage}
             onChange={setSelectedImage}
+            quality={quality}
+            setQuality={setQuality}
             loading={loading}
             setLoading={setLoading}
           />

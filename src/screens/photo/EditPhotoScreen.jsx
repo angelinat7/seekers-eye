@@ -77,7 +77,7 @@ export default function EditPhotoScreen({ navigation, route }) {
     if (values.description && values.description.trim() !== photo.description) {
       updates.description = values.description.trim();
     }
-    console.log("EditPhotoScreen, updates: ", updates);
+
     if (Object.keys(updates).length === 0) {
       Toast.show({
         type: "error",
@@ -137,7 +137,7 @@ export default function EditPhotoScreen({ navigation, route }) {
   return (
     <View style={[styles.container, { backgroundColor: theme.background }]}>
       <Header variant="EDIT_PHOTO" />
-      <View style={{ paddingLeft: 20, paddingVertical: 6 }}>
+      <View style={{ paddingLeft: 20, paddingVertical: 16 }}>
         <ButtonLink
           iconName="arrow-back"
           iconSize={18}
