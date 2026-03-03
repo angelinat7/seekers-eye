@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ActivityIndicator, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import Toast from "react-native-toast-message";
 import AuthLayout from "../../components/UI/AuthLayout";
 import ButtonLink from "../../components/UI/buttons/ButtonLink";
@@ -154,7 +154,6 @@ export default function RegisterScreen({ navigation, route }) {
 const styles = StyleSheet.create({
   formContainer: {
     width: "100%",
-    gap: 8,
   },
   info: {
     fontSize: 14,
