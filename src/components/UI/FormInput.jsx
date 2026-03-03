@@ -3,6 +3,7 @@ import { View, Text, TextInput, StyleSheet } from "react-native";
 export default function FormInput({
   label,
   message,
+  errorMessage,
   theme,
   editable = true,
   secureTextEntry = false,
@@ -31,6 +32,9 @@ export default function FormInput({
         ]}
         placeholderTextColor={theme.textSecondary}
       />
+      <Text style={[styles.message, { color: theme.error, fontWeight: "600" }]}>
+        {errorMessage ? errorMessage : null}
+      </Text>
       <Text style={[styles.message, { color: theme.textSecondary }]}>
         {message ? message : null}
       </Text>
@@ -57,7 +61,7 @@ export const styles = StyleSheet.create({
   },
   message: {
     fontSize: 10,
-    paddingTop: 2,
+    paddingTop: 4,
     paddingLeft: 4,
   },
   disabled: {

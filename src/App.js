@@ -1,11 +1,11 @@
 import {
-  useFonts,
   KaushanScript_400Regular,
+  useFonts,
 } from "@expo-google-fonts/kaushan-script";
-import { useEffect } from "react";
-import AppProvider from "./context/AppProvider";
 import * as ExpoSplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 import AppContent from "./components/AppContent";
+import AppProvider from "./context/AppProvider";
 
 export default function App() {
   const [loaded, error] = useFonts({

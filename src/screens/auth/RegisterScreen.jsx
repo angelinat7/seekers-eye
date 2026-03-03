@@ -1,58 +1,75 @@
 import { useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
+import Toast from "react-native-toast-message";
 import AuthLayout from "../../components/UI/AuthLayout";
 import ButtonLink from "../../components/UI/buttons/ButtonLink";
 import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
 import FormInput from "../../components/UI/FormInput";
+import { REGISTER_FIELDS } from "../../constants/input-fields";
 import { REDIRECT_ROUTES, RedirectTargets } from "../../constants/navigation";
 import { useAuth } from "../../context/auth/AuthContext";
 import { useTheme } from "../../context/theme/ThemeContext";
+import { useForm } from "../../hooks/useForm";
+import { validateInputField } from "../../utils/validate-input-field";
 
 export default function RegisterScreen({ navigation, route }) {
   const { theme } = useTheme();
-  const { register, login } = useAuth();
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
+  const { register, error } = useAuth();
   const [loading, setLoading] = useState(false);
+
+  const initialValues = {
+    email: "",
+    username: "",
+    password: "",
+    confirmPassword: "",
+  };
+
+  const { values, errors, handleInputChange, validateForm } = useForm({
+    initialValues,
+    fields: REGISTER_FIELDS,
+    validateField: validateInputField,
+  });
 
   const redirectTo = route.params?.redirectTo ?? RedirectTargets.HOME;
 
-  const handleRegisterSuccess = async () => {
-    if (!username || !email || !password) {
-      Alert.alert("Error", "Please fill in all fields");
+  const handleRegister = async () => {
+    const formErrors = validateForm(REGISTER_FIELDS);
+
+    if (Object.keys(formErrors).length > 0) {
+      Toast.show({
+        type: "error",
+        text1: "Form Error",
+        text2: "Please review the highlighted fields and try again",
+        position: "bottom",
+        bottomOffset: 200,
+      });
       return;
     }
 
-    if (password.length < 6) {
-      Alert.alert("Error", "Password must be at least 6 characters");
-      return;
-    }
+    try {
+      setLoading(true);
 
-    setLoading(true);
+      const user = await register(
+        values.email,
+        values.password,
+        values.username,
+      );
 
-    const registerRes = await register({ username, email, password });
-    if (!registerRes.success) {
-      Alert.alert("Registration Failed", registerRes.message);
+      const targetRoute =
+        REDIRECT_ROUTES[redirectTo] || REDIRECT_ROUTES[RedirectTargets.HOME];
+      navigation.replace("TabNavigator", targetRoute);
+    } catch (error) {
+      Toast.show({
+        type: "error",
+        text1: "Login failed",
+        text2: `${error?.message}` ?? "Something went wrong",
+        position: "bottom",
+        bottomOffset: 200,
+      });
+    } finally {
       setLoading(false);
-      return;
     }
-
-    const loginRes = await login(email, password);
-    setLoading(false);
-
-    if (!loginRes.success) {
-      Alert.alert("Login Failed", loginRes.message);
-      return;
-    }
-
-    Alert.alert("Success", "Account created successfully!");
-    const targetRoute =
-      REDIRECT_ROUTES[redirectTo] || REDIRECT_ROUTES[RedirectTargets.HOME];
-    navigation.replace("TabNavigator", targetRoute);
   };
-
   const handleNavigateToLogin = () => {
     navigation.navigate("Login", { redirectTo });
   };
@@ -63,54 +80,59 @@ export default function RegisterScreen({ navigation, route }) {
         <FormInput
           label="Name"
           placeholder="Your name"
-          value={username}
-          onChangeText={setUsername}
+          value={values.username}
+          onChangeText={(text) => handleInputChange("username", text)}
           theme={theme}
           editable={!loading}
+          errorMessage={errors.username}
         />
 
         <FormInput
           label="Email"
           placeholder="your@email.com"
-          value={email}
-          onChangeText={setEmail}
+          value={values.email}
+          onChangeText={(text) => handleInputChange("email", text)}
           theme={theme}
           editable={!loading}
           keyboardType="email-address"
           autoCapitalize="none"
+          errorMessage={errors.email}
         />
 
         <FormInput
           label="Password"
-          placeholder="••••••••"
-          value={password}
-          onChangeText={setPassword}
+          placeholder="Your password"
+          value={values.password}
+          onChangeText={(text) => handleInputChange("password", text)}
           theme={theme}
           editable={!loading}
           secureTextEntry
           autoCapitalize="none"
           autoComplete="off"
           textContentType="password"
+          errorMessage={errors.password}
         />
 
         <FormInput
-          label="Repeat password"
-          placeholder="••••••••"
-          value={repeatPassword}
-          onChangeText={setRepeatPassword}
+          label="Confirm password"
+          placeholder="Confirm password"
+          value={values.confirmPassword}
+          onChangeText={(text) => handleInputChange("confirmPassword", text)}
           theme={theme}
           editable={!loading}
           secureTextEntry
           autoCapitalize="none"
           autoComplete="off"
           textContentType="password"
+          errorMessage={errors.confirmPassword}
         />
         <View style={styles.buttonPrimaryContainer}>
           <ButtonPrimary
             title="Register"
             iconName="person-add-outline"
-            onPress={handleRegisterSuccess}
+            onPress={handleRegister}
             disabled={loading}
+            loading={loading}
           />
         </View>
 
@@ -129,10 +151,9 @@ export default function RegisterScreen({ navigation, route }) {
   );
 }
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   formContainer: {
     width: "100%",
-    gap: 8,
   },
   info: {
     fontSize: 14,

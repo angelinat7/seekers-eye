@@ -1,16 +1,15 @@
-import { isLoading } from "expo-font";
 import { createContext, useContext } from "react";
 
 export const AuthContext = createContext({
   user: null,
+  profile: {},
   isAuthenticated: false,
-  isLoading: true,
+  initializing: true,
   error: null,
-  register() {},
-  login() {},
-  logout() {},
-  clearError() {},
-  updateUser() {},
+  async register() {},
+  async login() {},
+  async logout() {},
+  updateProfile() {},
 });
 
 export function useAuth() {

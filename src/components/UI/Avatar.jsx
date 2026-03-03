@@ -5,10 +5,10 @@ import { useAuth } from "../../context/auth/AuthContext";
 import { useTheme } from "../../context/theme/ThemeContext";
 
 export default function Avatar({ size = "sm", avatar }) {
-  const { user } = useAuth();
+  const { profile } = useAuth();
   const { theme } = useTheme();
 
-  const uri = avatar ?? user?.avatar ?? "";
+  const uri = avatar ?? profile?.photoUrl ?? "";
 
   const sizes = {
     sm: 18,
@@ -16,8 +16,8 @@ export default function Avatar({ size = "sm", avatar }) {
     xl: 40,
   };
 
-  const initials = user.username?.trim()
-    ? user.username
+  const initials = profile.username?.trim()
+    ? profile.username
         .trim()
         .split(" ")
         .filter(Boolean)

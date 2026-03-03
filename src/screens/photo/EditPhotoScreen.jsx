@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/native";
+import { useEffect, useState } from "react";
 import {
   Image,
   KeyboardAvoidingView,
@@ -7,24 +7,131 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import Header from "../../components/UI/Header";
-
-import { useState } from "react";
+import Toast from "react-native-toast-message";
+import ConfirmModal from "../../components/modals/ConfirmModal";
 import ButtonLink from "../../components/UI/buttons/ButtonLink";
 import ButtonOutlined from "../../components/UI/buttons/ButtonOutlined";
 import ButtonPrimary from "../../components/UI/buttons/ButtonPrimary";
 import FormInput from "../../components/UI/FormInput";
+import Header from "../../components/UI/Header";
+import { EDIT_PHOTO_FIELDS } from "../../constants/input-fields";
 import { useTheme } from "../../context/theme/ThemeContext";
+import { useForm } from "../../hooks/useForm";
+import {
+  deletePhoto,
+  updatePhotoDocument,
+} from "../../services/firestore-photos-service";
+import { validateInputField } from "../../utils/validate-input-field";
 
-export default function EditPhotoScreen({ route }) {
+export default function EditPhotoScreen({ navigation, route }) {
   const { theme } = useTheme();
   const { photo } = route.params;
-  const [title, setTitle] = useState(photo.title ?? "");
-  const [description, setDescription] = useState(photo.description ?? "");
-  const navigation = useNavigation();
+  const [loading, setLoading] = useState(false);
+  const [confirmVisible, setConfirmVisible] = useState(false);
+
+  const initialValues = {
+    title: "",
+    description: "",
+  };
+
+  const { values, setValues, errors, handleInputChange, validateForm } =
+    useForm({
+      initialValues,
+      fields: EDIT_PHOTO_FIELDS,
+      validateField: validateInputField,
+    });
+
+  useEffect(() => {
+    if (!photo) return;
+
+    setValues((prev) => ({
+      ...prev,
+      title: photo?.title ?? "",
+      description: photo.description ?? "",
+    }));
+  }, [photo]);
 
   const onPressHandler = () => {
     navigation.goBack();
+  };
+
+  const onSaveHandler = async () => {
+    const formErrors = validateForm(EDIT_PHOTO_FIELDS);
+
+    if (Object.keys(formErrors).length > 0) {
+      Toast.show({
+        type: "error",
+        text1: "Form Error",
+        text2: "Please review the form and try again",
+        position: "bottom",
+        bottomOffset: 200,
+      });
+      return;
+    }
+    const updates = {};
+    // Check title change
+    if (values.title && values.title.trim() !== photo.title) {
+      updates.title = values.title.trim();
+    }
+    // Check description change
+    if (values.description && values.description.trim() !== photo.description) {
+      updates.description = values.description.trim();
+    }
+    console.log("EditPhotoScreen, updates: ", updates);
+    if (Object.keys(updates).length === 0) {
+      Toast.show({
+        type: "error",
+        text1: "No changes made",
+        text2: "Please review the form and try again",
+      });
+      return;
+    }
+    // Firestore update
+    setLoading(true);
+    try {
+      await updatePhotoDocument(photo.id, updates);
+      Toast.show({
+        type: "success",
+        text1: "Photo successfully updated",
+        position: "bottom",
+        bottomOffset: 200,
+      });
+      navigation.goBack();
+    } catch (error) {
+      console.warn(error);
+      Toast.show({
+        type: "error",
+        text1: "Failed to update",
+        text2: `${error.message}`,
+        position: "bottom",
+        bottomOffset: 200,
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onDeleteHandler = async () => {
+    try {
+      await deletePhoto(photo.id, photo.downloadURL);
+      Toast.show({
+        type: "success",
+        text1: "Picture deleted successfully",
+        position: "bottom",
+        bottomOffset: 200,
+      });
+
+      navigation.goBack();
+    } catch (error) {
+      console.warn(error);
+      Toast.show({
+        type: "error",
+        text1: "Error deleting picture",
+        text2: "Please try again",
+        position: "bottom",
+        bottomOffset: 200,
+      });
+    }
   };
 
   return (
@@ -51,21 +158,21 @@ export default function EditPhotoScreen({ route }) {
           showsVerticalScrollIndicator={false}
         >
           <View style={styles.imgContainer}>
-            <Image source={{ uri: photo.imageUrl }} style={styles.image} />
+            <Image source={{ uri: photo.downloadURL }} style={styles.image} />
           </View>
           <View>
             <FormInput
               label="Title"
-              placeholder=""
-              value={title}
-              onChangeText={setTitle}
+              value={values.title}
+              onChangeText={(text) => handleInputChange("title", text)}
+              errorMessage={errors.title}
               theme={theme}
             />
             <FormInput
               label="Description"
-              placeholder=""
-              value={description}
-              onChangeText={setDescription}
+              value={values.description}
+              onChangeText={(text) => handleInputChange("description", text)}
+              errorMessage={errors.description}
               multiline
               numberOfLines={2}
               theme={theme}
@@ -77,11 +184,23 @@ export default function EditPhotoScreen({ route }) {
               title="Save Changes"
               iconName="save-outline"
               style={{ width: "80%" }}
+              onPress={onSaveHandler}
             />
             <ButtonOutlined
               iconName="trash-outline"
               color={theme.error}
               style={{ width: "16%" }}
+              onPress={() => setConfirmVisible(true)}
+            />
+            <ConfirmModal
+              visible={confirmVisible}
+              title="Delete  photo"
+              message={`You are about to delete a photo from your collection.\n This action cannot be undone`}
+              onCancel={() => setConfirmVisible(false)}
+              onConfirm={() => {
+                setConfirmVisible(false);
+                onDeleteHandler();
+              }}
             />
           </View>
         </ScrollView>

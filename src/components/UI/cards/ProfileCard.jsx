@@ -3,9 +3,7 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { useAuth } from "../../../context/auth/AuthContext";
 import Avatar from "../Avatar";
 
-export default function ProfileCard({ user, theme, onEditProfileHandler }) {
-  const { updatedUsers } = useAuth();
-
+export default function ProfileCard({ profile, theme, onEditProfileHandler }) {
   return (
     <TouchableOpacity
       onPress={onEditProfileHandler}
@@ -17,10 +15,10 @@ export default function ProfileCard({ user, theme, onEditProfileHandler }) {
 
           <View style={styles.userInfo}>
             <Text style={[styles.userName, { color: theme.textPrimary }]}>
-              {user.username}
+              {profile?.username}
             </Text>
             <Text style={[styles.userEmail, { color: theme.textPrimary }]}>
-              {user.email} {user.initials}
+              {profile.email} {profile.initials}
             </Text>
           </View>
         </View>

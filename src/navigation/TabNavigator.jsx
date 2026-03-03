@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { useAuth } from "../context/auth/AuthContext";
 import { TAB_SCREENS } from "../constants/tab-screens";
 import { useTheme } from "../context/theme/ThemeContext";
+import ProtectedScreen from "../components/ProtectedScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -41,7 +42,15 @@ export default function TabNavigator() {
         <Tab.Screen
           key={screen.name}
           name={screen.name}
-          component={screen.component}
+          children={() =>
+            screen.requiresAuth ? (
+              <ProtectedScreen>
+                <screen.component />
+              </ProtectedScreen>
+            ) : (
+              <screen.component />
+            )
+          }
           options={{
             title: screen.title,
             tabBarIcon: ({ color }) => (
