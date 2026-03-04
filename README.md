@@ -6,6 +6,8 @@
 
 ---
 
+[Link to Apk](https://drive.google.com/file/d/1GfwvWpccszQSu_3CSXysGqEVxRFF5Y2g/view?usp=drive_link)
+
 **Seeker’s Eye** is a React Native photo contest app focused on perspective and visual storytelling.  
 Users can explore, share, and vote on photos in a safe and positive environment.
 
